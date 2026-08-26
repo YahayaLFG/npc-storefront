@@ -1,0 +1,85 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  scrollbar-width: thin;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+::selection {
+  background: #141311;
+  color: #f5f3ee;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+  border-radius: 1px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.grain-overlay {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.045'/%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+.font-tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+.reticle {
+  position: relative;
+}
+.reticle::before,
+.reticle::after {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  z-index: 10;
+}
+.reticle::before {
+  top: 10px;
+  left: 10px;
+  border-top: 1px solid currentColor;
+  border-left: 1px solid currentColor;
+}
+.reticle::after {
+  bottom: 10px;
+  right: 10px;
+  border-bottom: 1px solid currentColor;
+  border-right: 1px solid currentColor;
+}
+.reticle:hover::before,
+.reticle:hover::after {
+  opacity: 0.85;
+}
+
+.cursor-blink {
+  display: inline-block;
+  animation: blink 1.1s step-end infinite;
+}
+
+.eyebrow {
+  letter-spacing: 0.18em;
+}
