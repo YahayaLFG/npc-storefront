@@ -22,12 +22,19 @@ export default function ProductDetailClient({ product }) {
   const touchStartX = useRef(null);
 
   const totalPrice = product.price * quantity;
-  const gallery = product.gallery?.length ? product.gallery : [product.image];
+  const gallery = currentVariant?.images?.length
+    ? currentVariant.images
+    : product.gallery?.length
+      ? product.gallery
+      : [product.image];
+
+  const sizeGuides = currentVariant?.sizeGuides || [];
 
   function handleColorChange(newColor) {
     setColor(newColor);
     const newVariant = product.variants.find((v) => v.color === newColor);
     setSize(newVariant?.sizes[0] || '');
+    setActiveImage(0);
   }
 
   function goTo(delta) {
@@ -162,7 +169,7 @@ export default function ProductDetailClient({ product }) {
             <div className="mt-6">
               <div className="flex items-center justify-between">
                 <p className="text-xs uppercase tracking-wide text-ink-fog">Size</p>
-                {product.sizeGuide && (
+                {sizeGuides.length > 0 && (
                   <button
                     type="button"
                     onClick={() => setSizeGuideOpen((v) => !v)}
@@ -188,9 +195,9 @@ export default function ProductDetailClient({ product }) {
                   </button>
                 ))}
               </div>
-              {product.sizeGuide && sizeGuideOpen && (
+              {sizeGuides.length > 0 && sizeGuideOpen && (
                 <div className="mt-3 animate-rise">
-                  <SizeGuideTable sizeGuide={product.sizeGuide} />
+                  <SizeGuideTable sizeGuide={sizeGuides[0]} />
                 </div>
               )}
             </div>
