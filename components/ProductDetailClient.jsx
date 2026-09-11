@@ -33,7 +33,10 @@ export default function ProductDetailClient({ product }) {
   function handleColorChange(newColor) {
     setColor(newColor);
     const newVariant = product.variants.find((v) => v.color === newColor);
-    setSize(newVariant?.sizes[0] || '');
+    const firstAvailableSize = newVariant?.sizes.find(
+      (s) => !(newVariant.outOfStockSizes || []).includes(s)
+    );
+    setSize(firstAvailableSize || '');
     setActiveImage(0);
   }
 
@@ -52,18 +55,24 @@ export default function ProductDetailClient({ product }) {
   }
 
   function handleAddToCart() {
-    addItem({
-      productSlug: product.id,
-      name: product.name,
-      image: product.image,
-      price: product.price,
-      color,
-      size,
-      quantity,
-    });
-    setAdded(true);
-    setTimeout(() => setAdded(false), 2000);
+  const isOutOfStock = (currentVariant?.outOfStockSizes || []).includes(size);
+
+  if (isOutOfStock) {
+    return;
   }
+
+  addItem({
+    productSlug: product.id,
+    name: product.name,
+    image: product.image,
+    price: product.price,
+    color,
+    size,
+    quantity,
+  });
+  setAdded(true);
+  setTimeout(() => setAdded(false), 2000);
+}
 
   return (
     <div className="mx-auto max-w-6xl px-5 py-10 md:px-8 md:py-14">
@@ -181,20 +190,27 @@ export default function ProductDetailClient({ product }) {
                 )}
               </div>
               <div className="mt-3 flex flex-wrap gap-2">
-                {currentVariant.sizes.map((s) => (
-                  <button
-                    key={s}
-                    onClick={() => setSize(s)}
-                    className={`border px-4 py-2 text-sm transition-colors ${
-                      size === s
-                        ? 'border-ink bg-ink text-canvas'
-                        : 'border-rule text-ink hover:border-ink-fog'
-                    }`}
-                  >
-                    {s}
-                  </button>
-                ))}
-              </div>
+                {currentVariant.sizes.map((s) => {
+                  const isOutOfStock = (currentVariant.outOfStockSizes || []).includes(s);
+
+                  return (
+                    <button
+                      key={s}
+                      type="button"
+                      disabled={isOutOfStock}
+                      onClick={() => !isOutOfStock && setSize(s)}
+                      className={`border px-4 py-2 text-sm transition-colors ${
+                        isOutOfStock
+                          ? "cursor-not-allowed border-rule text-ink-fog line-through opacity-50"
+                          : size === s
+                            ? "border-ink bg-ink text-canvas"
+                            : "border-rule text-ink hover:border-ink-fog"
+                      }`}
+                    >
+                      {s}
+                    </button>
+                  );
+                })}              </div>
               {sizeGuides.length > 0 && sizeGuideOpen && (
                 <div className="mt-3 animate-rise">
                   <SizeGuideTable sizeGuide={sizeGuides[0]} />

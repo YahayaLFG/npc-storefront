@@ -26,10 +26,11 @@ function buildInitialVariants(initial) {
       sizes: csv(v.sizes),
       images: v.images || [],
       isActive: v.is_active !== false,
+      outOfStockSizes: v.out_of_stock_sizes || [],
       sizeGuideClientIds: v.size_guide_ids || [],
     }));
   }
-  return [{ clientId: generateId(), id: null, color: '', sizes: '', images: [], isActive: true, sizeGuideClientIds: [] }];
+  return [{ clientId: generateId(), id: null, color: '', sizes: '', images: [], isActive: true, outOfStockSizes: [], sizeGuideClientIds: [] }];
 }
 
 function buildInitialSizeGuides(initial) {
@@ -111,10 +112,23 @@ export default function ProductForm({ initial }) {
   function updateVariant(index, field, value) {
     setVariants((prev) => prev.map((v, i) => (i === index ? { ...v, [field]: value } : v)));
   }
+  function toggleVariantOutOfStock(index, size) {
+    setVariants((prev) =>
+      prev.map((v, i) => {
+        if (i !== index) return v;
+        const current = v.outOfStockSizes || [];
+        const has = current.includes(size);
+        return {
+          ...v,
+          outOfStockSizes: has ? current.filter((s) => s !== size) : [...current, size],
+        };
+      })
+    );
+  }
   function addVariant() {
     setVariants((prev) => [
       ...prev,
-      { clientId: generateId(), id: null, color: '', sizes: '', images: [], isActive: true, sizeGuideClientIds: [] },
+      { clientId: generateId(), id: null, color: '', sizes: '', images: [], isActive: true, outOfStockSizes: [], sizeGuideClientIds: [] },
     ]);
   }
   function removeVariant(index) {
@@ -237,7 +251,7 @@ export default function ProductForm({ initial }) {
         );
       } else if (data.sizes?.length) {
         setVariants([
-          { clientId: generateId(), id: null, color: '', sizes: csv(data.sizes), images: [], isActive: true, sizeGuideClientIds: [] },
+          { clientId: generateId(), id: null, color: '', sizes: csv(data.sizes), images: [], isActive: true, outOfStockSizes: [], sizeGuideClientIds: [] },
         ]);
       }
       if (data.estimatedWeightKg != null) setEstimatedWeightKg(data.estimatedWeightKg);
@@ -342,7 +356,11 @@ export default function ProductForm({ initial }) {
     if (images.length === 0) return setError('Upload at least one product image.');
 
     const cleanVariants = variants
-      .map((v) => ({ ...v, color: v.color.trim(), sizes: parseCsv(v.sizes) }))
+      .map((v) => {
+        const sizes = parseCsv(v.sizes);
+        const outOfStockSizes = (v.outOfStockSizes || []).filter((s) => sizes.includes(s));
+        return { ...v, color: v.color.trim(), sizes, outOfStockSizes };
+      })
       .filter((v) => v.color && v.sizes.length > 0);
     if (cleanVariants.length === 0) {
       return setError('Add at least one color with at least one size.');
@@ -378,6 +396,7 @@ export default function ProductForm({ initial }) {
       sizes: v.sizes,
       images: v.images,
       isActive: v.isActive,
+      outOfStockSizes: v.outOfStockSizes || [],
       sizeGuideClientIds: v.sizeGuideClientIds,
     }));
 
@@ -593,6 +612,31 @@ export default function ProductForm({ initial }) {
                       <X size={16} />
                     </button>
                   </div>
+
+                  {parseCsv(v.sizes).length > 0 && (
+                    <div className="mt-3">
+                      <p className="text-[10px] uppercase tracking-wide text-mute">Size availability</p>
+                      <div className="mt-1.5 flex flex-wrap gap-2">
+                        {parseCsv(v.sizes).map((s) => {
+                          const isOutOfStock = (v.outOfStockSizes || []).includes(s);
+                          return (
+                            <button
+                              key={s}
+                              type="button"
+                              onClick={() => toggleVariantOutOfStock(i, s)}
+                              className={`border px-2.5 py-1 text-xs transition-colors ${
+                                isOutOfStock
+                                  ? "border-line bg-panel text-mute line-through"
+                                  : "border-bone bg-bone text-black"
+                              }`}
+                            >
+                              {s}{isOutOfStock ? " · Out of stock" : " · Available"}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
 
                   <div className="mt-3 flex flex-wrap gap-2">
                     {v.images.map((src, imgIdx) => (
