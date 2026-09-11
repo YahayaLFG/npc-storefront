@@ -38,8 +38,8 @@ export default function Footer() {
                 </a>
               </li>
               <li>
-                <a href="mailto:hello@npc.ng" className="hover:text-ink">
-                  hello@npc.ng
+                <a href="mailto:hello@npc-store.com" className="hover:text-ink">
+                  hello@npc-store.com
                 </a>
               </li>
             </ul>

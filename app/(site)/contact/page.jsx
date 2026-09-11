@@ -37,8 +37,8 @@ export default function ContactPage() {
         <div className="border border-rule p-6">
           <Mail size={20} className="text-ink" />
           <p className="mt-3 font-display text-lg">Email</p>
-          <a href="mailto:hello@npc.ng" className="mt-1 block text-sm text-ink-fog hover:text-ink">
-            hello@npc.ng
+          <a href="mailto:hello@npc-store.com" className="mt-1 block text-sm text-ink-fog hover:text-ink">
+            hello@npc-store.com
           </a>
         </div>
 
