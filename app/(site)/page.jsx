@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { getFeatured, getNewArrivals, getByCollection } from '@/lib/products';
 import ShelfSection from '@/components/ShelfSection';
+import NPCDropHero from '@/components/NPCDropHero';
 
 export default async function HomePage() {
   const [featured, newArrivals, men, women, accessories] = await Promise.all([
@@ -11,8 +12,10 @@ export default async function HomePage() {
     getByCollection('Accessories'),
   ]);
 
-  const heroImage = featured[0]?.image || newArrivals[0]?.image;
-
+const heroProducts = [...featured, ...newArrivals, ...men, ...women, ...accessories].filter(
+  (product, index, products) =>
+    products.findIndex((p) => p.id === product.id) === index
+);
   const shelves = [
     { title: 'Featured', products: featured, href: '/shop' },
     { title: 'New Arrivals', products: newArrivals, href: '/shop' },
@@ -23,43 +26,7 @@ export default async function HomePage() {
 
   return (
     <>
-      <section className="mx-auto max-w-6xl px-5 pt-10 md:px-8 md:pt-14">
-        <div className="aspect-[4/3] w-full overflow-hidden bg-canvas-alt md:aspect-[16/9]">
-          {heroImage ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={heroImage} alt="" className="h-full w-full object-cover" />
-          ) : (
-            <div className="flex h-full items-center justify-center text-ink-fog">
-              Add your first product to set the hero image
-            </div>
-          )}
-        </div>
-
-        <div className="mt-8 flex flex-col items-start justify-between gap-6 border-b border-rule pb-10 md:flex-row md:items-end">
-          <div>
-            <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-ink-fog">
-              The algorithm found you first
-            </p>
-            <h1 className="mt-3 max-w-lg font-display text-3xl font-medium leading-tight tracking-tight text-ink md:text-5xl">
-              Uniforms for the internet.
-            </h1>
-          </div>
-          <div className="flex gap-3">
-            <Link
-              href="/shop"
-              className="flex items-center justify-center rounded-full bg-ink px-7 py-3 text-sm font-medium text-canvas transition-transform hover:scale-[1.02]"
-            >
-              Shop
-            </Link>
-            <Link
-              href="/request"
-              className="flex items-center justify-center rounded-full border border-ink px-7 py-3 text-sm font-medium text-ink transition-colors hover:bg-ink hover:text-canvas"
-            >
-              Request a Piece
-            </Link>
-          </div>
-        </div>
-      </section>
+      <NPCDropHero products={heroProducts} />
 
       {shelves.map((shelf, i) =>
         shelf.products.length ? (
@@ -76,13 +43,17 @@ export default async function HomePage() {
       {!shelves.some((s) => s.products.length) && (
         <div className="mx-auto max-w-2xl px-5 py-24 text-center text-ink-fog">
           <p>No products published yet.</p>
-          <p className="mt-2 text-sm">Add your first one from the admin dashboard at /admin.</p>
+          <p className="mt-2 text-sm">
+            Add your first one from the admin dashboard at /admin.
+          </p>
         </div>
       )}
 
       <section className="border-t border-rule">
         <div className="mx-auto max-w-6xl px-5 py-24 text-center md:px-8">
-          <p className="font-mono text-xs uppercase tracking-[0.3em] text-ink-fog">Quiet flex only</p>
+          <p className="font-mono text-xs uppercase tracking-[0.3em] text-ink-fog">
+            Quiet flex only
+          </p>
           <h2 className="mx-auto mt-4 max-w-lg font-display text-3xl font-medium tracking-tight text-ink md:text-4xl">
             Seen something we don't carry?
           </h2>
