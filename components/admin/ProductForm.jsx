@@ -175,19 +175,32 @@ export default function ProductForm({ initial }) {
   }
 
   function addSizeGuide() {
-    setSizeGuides((prev) => [
-      ...prev,
-      {
-        clientId: generateId(),
-        id: null,
-        name: '',
-        unit: 'cm',
-        fields: getSizeGuideTemplate(category),
-        rows: {},
-        chartImage: '',
-      },
-    ]);
-  }
+  const clientId = generateId();
+
+  setSizeGuides((prev) => [
+    ...prev,
+    {
+      clientId,
+      id: null,
+      name: '',
+      unit: 'cm',
+      fields: getSizeGuideTemplate(category),
+      rows: {},
+      chartImage: '',
+    },
+  ]);
+
+  setVariants((prev) =>
+    prev.map((v, index) =>
+      index === 0
+        ? {
+            ...v,
+            sizeGuideClientIds: [...v.sizeGuideClientIds, clientId],
+          }
+        : v
+    )
+  );
+}
   function updateSizeGuide(index, field, value) {
     setSizeGuides((prev) => prev.map((g, i) => (i === index ? { ...g, [field]: value } : g)));
   }
