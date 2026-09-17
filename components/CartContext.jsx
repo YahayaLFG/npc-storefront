@@ -9,6 +9,14 @@ function lineKey(item) {
   return `${item.productSlug}:${item.color}:${item.size}`;
 }
 
+// Missing `selected` (old carts saved before this feature existed) is
+// always treated as selected — never as deselected. Nothing ever writes
+// `selected: false` implicitly; it only becomes false if the customer
+// explicitly unchecks something.
+function isSelected(item) {
+  return item.selected !== false;
+}
+
 export function CartProvider({ children }) {
   const [items, setItems] = useState([]);
   const [hydrated, setHydrated] = useState(false);
@@ -41,7 +49,9 @@ export function CartProvider({ children }) {
           lineKey(i) === key ? { ...i, quantity: i.quantity + newItem.quantity } : i
         );
       }
-      return [...prev, newItem];
+      // New lines default to selected — matches how an old cart with no
+      // `selected` key at all is already treated everywhere else.
+      return [...prev, { ...newItem, selected: true }];
     });
   }, []);
 
@@ -55,14 +65,84 @@ export function CartProvider({ children }) {
     );
   }, []);
 
+  const toggleSelected = useCallback((key) => {
+    setItems((prev) =>
+      prev.map((i) => (lineKey(i) === key ? { ...i, selected: !isSelected(i) } : i))
+    );
+  }, []);
+
+  const selectAll = useCallback(() => {
+    setItems((prev) => prev.map((i) => ({ ...i, selected: true })));
+  }, []);
+
+  const deselectAll = useCallback(() => {
+    setItems((prev) => prev.map((i) => ({ ...i, selected: false })));
+  }, []);
+
+  /**
+   * Changes a line's color/size (from the cart-page edit panel). If the
+   * new color+size already matches a DIFFERENT existing line, the two
+   * merge (quantities combine, the edited line is removed) rather than
+   * creating a second line with the same identity. Editing a line's own
+   * unchanged color/size is a no-op merge into itself, handled the same
+   * way without special-casing.
+   */
+  const updateItem = useCallback((oldKey, changes) => {
+    setItems((prev) => {
+      const target = prev.find((i) => lineKey(i) === oldKey);
+      if (!target) return prev;
+
+      const updated = { ...target, ...changes };
+      const newKey = lineKey(updated);
+
+      if (newKey === oldKey) {
+        return prev.map((i) => (lineKey(i) === oldKey ? updated : i));
+      }
+
+      const collision = prev.find((i) => lineKey(i) !== oldKey && lineKey(i) === newKey);
+      if (collision) {
+        return prev
+          .filter((i) => lineKey(i) !== oldKey)
+          .map((i) =>
+            lineKey(i) === newKey ? { ...i, quantity: i.quantity + updated.quantity } : i
+          );
+      }
+
+      return prev.map((i) => (lineKey(i) === oldKey ? updated : i));
+    });
+  }, []);
+
   const clear = useCallback(() => setItems([]), []);
 
+  const selectedItems = items.filter(isSelected);
   const totalCount = items.reduce((sum, i) => sum + i.quantity, 0);
   const totalPrice = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
+  const selectedTotalPrice = selectedItems.reduce((sum, i) => sum + i.price * i.quantity, 0);
+  const selectedCount = selectedItems.reduce((sum, i) => sum + i.quantity, 0);
+  const allSelected = items.length > 0 && selectedItems.length === items.length;
 
   return (
     <CartContext.Provider
-      value={{ items, addItem, removeItem, updateQuantity, clear, totalCount, totalPrice, hydrated, lineKey }}
+      value={{
+        items,
+        addItem,
+        removeItem,
+        updateQuantity,
+        updateItem,
+        toggleSelected,
+        selectAll,
+        deselectAll,
+        clear,
+        totalCount,
+        totalPrice,
+        selectedItems,
+        selectedTotalPrice,
+        selectedCount,
+        allSelected,
+        isSelected,
+        hydrated,
+        lineKey,
+      }}
     >
       {children}
     </CartContext.Provider>

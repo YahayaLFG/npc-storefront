@@ -1,8 +1,11 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { formatNGN } from '@/lib/format';
+import CurrencyPrice from './CurrencyPrice';
 
 export default function ProductCard({ product, index = 0 }) {
+  const range = product.priceRange;
+  const pricesDiffer = range && range.min !== range.max;
+
   return (
     <Link href={`/product/${product.id}`} className="group flex flex-col text-ink">
       <div className="reticle relative aspect-[4/5] w-full overflow-hidden bg-canvas-alt">
@@ -26,7 +29,15 @@ export default function ProductCard({ product, index = 0 }) {
           {product.authenticityTag && ` · ${product.authenticityTag}`}
         </span>
         <h3 className="font-display text-base text-ink">{product.name}</h3>
-        <span className="font-mono text-sm text-ink-fog">{formatNGN(product.price)}</span>
+        <span className="font-mono text-sm text-ink-fog">
+          {pricesDiffer ? (
+            <>
+              From <CurrencyPrice amountNgn={range.min} />
+            </>
+          ) : (
+            <CurrencyPrice amountNgn={range ? range.min : product.price} />
+          )}
+        </span>
       </div>
     </Link>
   );

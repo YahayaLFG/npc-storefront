@@ -1,8 +1,11 @@
 import CheckoutClient from '@/components/CheckoutClient';
+import { getMyAddresses } from '@/lib/account/addresses';
 
 export const metadata = { title: 'Checkout — NPC' };
 
-export default function CheckoutPage() {
+export default async function CheckoutPage() {
+  const addresses = await getMyAddresses();
+
   return (
     <div className="mx-auto max-w-2xl px-5 py-14 md:px-8 md:py-20">
       <p className="font-mono text-xs uppercase tracking-[0.3em] text-ink-fog">Checkout</p>
@@ -15,7 +18,7 @@ export default function CheckoutPage() {
       </p>
 
       <div className="mt-10">
-        <CheckoutClient />
+        <CheckoutClient initialAddresses={addresses} />
       </div>
     </div>
   );

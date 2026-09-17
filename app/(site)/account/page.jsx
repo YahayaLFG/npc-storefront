@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { getMyOrders } from '@/lib/account/orders';
 import { logout } from '@/lib/account/auth';
-import { orderStatusLabel } from '@/lib/orderStatus';
+import { customerStatusLabel } from '@/lib/orderStatus';
 import { formatNGN } from '@/lib/format';
 import { getMyNotifications } from '@/lib/notifications';
 import NotificationRow from '@/components/account/NotificationRow';
@@ -81,7 +81,7 @@ export default async function AccountPage() {
                   </p>
                 </div>
                 <span className="rounded-full border border-rule px-3 py-1 text-xs text-ink-fog">
-                  {orderStatusLabel(order.status)}
+                  {customerStatusLabel(order.status)}
                 </span>
                 <span className="font-mono text-sm text-ink">{formatNGN(order.product_price)}</span>
               </Link>
