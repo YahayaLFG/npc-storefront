@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { CheckCircle2 } from 'lucide-react';
 import { getMyShipmentById } from '@/lib/account/warehouse';
 import { SHIPMENT_STATUSES } from '@/lib/orderStatus';
-import { formatNGN } from '@/lib/format';
+import CurrencyPrice from '@/components/CurrencyPrice';
 
 export default async function ShipmentDetailPage({ params, searchParams }) {
   const shipment = await getMyShipmentById(params.id);
@@ -63,7 +63,7 @@ export default async function ShipmentDetailPage({ params, searchParams }) {
       <div className="mt-6 flex justify-between border border-rule bg-canvas-alt p-5 font-mono text-sm">
         <span className="text-ink-fog">Total weight / shipping paid</span>
         <span className="text-ink">
-          {shipment.total_weight_kg} kg — {formatNGN(shipment.shipping_cost)}
+          {shipment.total_weight_kg} kg — <CurrencyPrice amountNgn={shipment.shipping_cost} />
         </span>
       </div>
 

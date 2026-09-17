@@ -1,8 +1,8 @@
 import Link from 'next/link';
 import { CheckCircle2 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/server';
-import { orderStatusLabel } from '@/lib/orderStatus';
-import { formatNGN } from '@/lib/format';
+import { customerStatusLabel } from '@/lib/orderStatus';
+import CurrencyPrice from '@/components/CurrencyPrice';
 import ClearPurchasedCartItems from '@/components/ClearPurchasedCartItems';
 
 export default async function CheckoutConfirmationPage({ searchParams }) {
@@ -71,7 +71,7 @@ export default async function CheckoutConfirmationPage({ searchParams }) {
           Payment successful
         </p>
         <h1 className="mt-2 font-display text-3xl font-medium tracking-tight text-ink md:text-4xl">
-          {formatNGN(batch.total_amount)} paid
+          <CurrencyPrice amountNgn={batch.total_amount} /> paid
         </h1>
         <p className="mt-2 font-mono text-xs text-ink-fog">Reference: {batch.paystack_reference}</p>
       </div>
@@ -97,9 +97,9 @@ export default async function CheckoutConfirmationPage({ searchParams }) {
               <p className="mt-1 font-mono text-xs text-ink-fog">{order.order_number}</p>
             </div>
             <span className="rounded-full border border-rule px-3 py-1 text-xs text-ink-fog">
-              {orderStatusLabel(order.status)}
+              {customerStatusLabel(order.status)}
             </span>
-            <span className="font-mono text-sm text-ink">{formatNGN(order.product_price)}</span>
+            <span className="font-mono text-sm text-ink"><CurrencyPrice amountNgn={order.product_price} /></span>
           </Link>
         ))}
       </div>

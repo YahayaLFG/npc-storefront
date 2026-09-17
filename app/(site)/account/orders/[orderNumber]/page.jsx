@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { CheckCircle2, Truck } from 'lucide-react';
 import { getMyOrderByNumber, getWarehouseItemForOrder } from '@/lib/account/orders';
-import { formatNGN } from '@/lib/format';
+import CurrencyPrice from '@/components/CurrencyPrice';
 import OrderTrackingTimeline from '@/components/account/OrderTrackingTimeline';
 
 export default async function OrderDetailPage({ params, searchParams }) {
@@ -57,7 +57,7 @@ export default async function OrderDetailPage({ params, searchParams }) {
           <p className="text-sm text-ink">
             {order.variant_color} · {order.variant_size} · Qty {order.quantity}
           </p>
-          <p className="mt-1 font-mono text-sm text-ink-fog">{formatNGN(order.product_price)}</p>
+          <p className="mt-1 font-mono text-sm text-ink-fog"><CurrencyPrice amountNgn={order.product_price} /></p>
         </div>
       </div>
 

@@ -28,9 +28,10 @@ function buildInitialVariants(initial) {
       isActive: v.is_active !== false,
       outOfStockSizes: v.out_of_stock_sizes || [],
       sizeGuideClientIds: v.size_guide_ids || [],
+      price: v.price != null ? String(v.price) : '',
     }));
   }
-  return [{ clientId: generateId(), id: null, color: '', sizes: '', images: [], isActive: true, outOfStockSizes: [], sizeGuideClientIds: [] }];
+  return [{ clientId: generateId(), id: null, color: '', sizes: '', images: [], isActive: true, outOfStockSizes: [], sizeGuideClientIds: [], price: '' }];
 }
 
 function buildInitialSizeGuides(initial) {
@@ -128,7 +129,7 @@ export default function ProductForm({ initial }) {
   function addVariant() {
     setVariants((prev) => [
       ...prev,
-      { clientId: generateId(), id: null, color: '', sizes: '', images: [], isActive: true, outOfStockSizes: [], sizeGuideClientIds: [] },
+      { clientId: generateId(), id: null, color: '', sizes: '', images: [], isActive: true, outOfStockSizes: [], sizeGuideClientIds: [], price: '' },
     ]);
   }
   function removeVariant(index) {
@@ -259,12 +260,14 @@ export default function ProductForm({ initial }) {
             sizes: sizesCsv,
             images: [],
             isActive: true,
+            outOfStockSizes: [],
             sizeGuideClientIds: [],
+            price: '',
           }))
         );
       } else if (data.sizes?.length) {
         setVariants([
-          { clientId: generateId(), id: null, color: '', sizes: csv(data.sizes), images: [], isActive: true, outOfStockSizes: [], sizeGuideClientIds: [] },
+          { clientId: generateId(), id: null, color: '', sizes: csv(data.sizes), images: [], isActive: true, outOfStockSizes: [], sizeGuideClientIds: [], price: '' },
         ]);
       }
       if (data.estimatedWeightKg != null) setEstimatedWeightKg(data.estimatedWeightKg);
@@ -411,6 +414,7 @@ export default function ProductForm({ initial }) {
       isActive: v.isActive,
       outOfStockSizes: v.outOfStockSizes || [],
       sizeGuideClientIds: v.sizeGuideClientIds,
+      price: v.price,
     }));
 
     const payload = {
@@ -624,6 +628,24 @@ export default function ProductForm({ initial }) {
                     >
                       <X size={16} />
                     </button>
+                  </div>
+
+                  <div className="mt-2 flex items-center gap-2">
+                    <label className="shrink-0 text-[10px] uppercase tracking-wide text-mute">
+                      Price override
+                    </label>
+                    <input
+                      type="number"
+                      step="1"
+                      value={v.price}
+                      onChange={(e) => updateVariant(i, 'price', e.target.value)}
+                      placeholder={
+                        pricing?.npcSellingPrice
+                          ? `Defaults to ₦${pricing.npcSellingPrice.toLocaleString('en-NG')}`
+                          : 'Leave blank to use the product price'
+                      }
+                      className="w-64 border border-line bg-panel px-3 py-1.5 text-sm text-bone placeholder:text-mute focus:border-bone"
+                    />
                   </div>
 
                   {parseCsv(v.sizes).length > 0 && (

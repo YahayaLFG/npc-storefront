@@ -4,12 +4,14 @@ import { useState, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Truck, Minus, Plus, Ruler, ChevronLeft, ChevronRight, Check } from 'lucide-react';
-import { formatNGN } from '@/lib/format';
+import { formatPrice } from '@/lib/currency';
+import { useCurrency } from './CurrencyContext';
 import SizeGuideTable from './SizeGuideTable';
 import { useCart } from './CartContext';
 
 export default function ProductDetailClient({ product }) {
   const { addItem } = useCart();
+  const { currency } = useCurrency();
   const [activeImage, setActiveImage] = useState(0);
   const [color, setColor] = useState(product.variants[0]?.color || '');
   const currentVariant = product.variants.find((v) => v.color === color);
@@ -21,7 +23,10 @@ export default function ProductDetailClient({ product }) {
   const [added, setAdded] = useState(false);
   const touchStartX = useRef(null);
 
-  const totalPrice = product.price * quantity;
+  // Authoritative price for the selected variant — falls back to the
+  // product's base price only when this variant has no override.
+  const unitPrice = currentVariant?.price ?? product.price;
+  const totalPrice = unitPrice * quantity;
   const gallery = currentVariant?.images?.length
     ? currentVariant.images
     : product.gallery?.length
@@ -65,7 +70,7 @@ export default function ProductDetailClient({ product }) {
     productSlug: product.id,
     name: product.name,
     image: product.image,
-    price: product.price,
+    price: unitPrice,
     color,
     size,
     quantity,
@@ -147,7 +152,7 @@ export default function ProductDetailClient({ product }) {
             {product.name}
           </h1>
 
-          <p className="mt-4 font-mono text-xl text-ink">{formatNGN(product.price)}</p>
+          <p className="mt-4 font-mono text-xl text-ink">{formatPrice(unitPrice, currency)}</p>
 
           <p className="mt-6 max-w-md text-sm leading-relaxed text-ink-fog">{product.description}</p>
 
@@ -256,7 +261,7 @@ export default function ProductDetailClient({ product }) {
                 <Check size={16} /> Added to Cart
               </>
             ) : (
-              `Add to Cart — ${formatNGN(totalPrice)}`
+              `Add to Cart — ${formatPrice(totalPrice, currency)}`
             )}
           </button>
 

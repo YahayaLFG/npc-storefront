@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { getMyOrders } from '@/lib/account/orders';
-import { orderStatusLabel } from '@/lib/orderStatus';
-import { formatNGN } from '@/lib/format';
+import { customerStatusLabel } from '@/lib/orderStatus';
+import CurrencyPrice from '@/components/CurrencyPrice';
 
 export const metadata = { title: 'My Orders — NPC' };
 
@@ -46,9 +46,9 @@ export default async function MyOrdersPage() {
                 </p>
               </div>
               <span className="hidden rounded-full border border-rule px-3 py-1 text-xs text-ink-fog sm:inline">
-                {orderStatusLabel(order.status)}
+                {customerStatusLabel(order.status)}
               </span>
-              <span className="font-mono text-sm text-ink">{formatNGN(order.product_price)}</span>
+              <span className="font-mono text-sm text-ink"><CurrencyPrice amountNgn={order.product_price} /></span>
             </Link>
           ))}
         </div>
