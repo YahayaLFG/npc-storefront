@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { buildWhatsAppLink } from '@/lib/whatsapp';
 import { CheckCircle2 } from 'lucide-react';
 import { getMyShipmentById } from '@/lib/account/warehouse';
 import { SHIPMENT_STATUSES } from '@/lib/orderStatus';
@@ -85,6 +86,14 @@ export default async function ShipmentDetailPage({ params, searchParams }) {
             );
           })}
         </ol>
+      </div>
+
+      <div className="mb-8 border border-rule bg-canvas-alt p-5 text-sm">
+        <p>Pickup: Chevron, Lagos. Collection details will be confirmed once your items arrive.</p>
+        <p className="mt-2 text-ink-fog">Request local delivery on WhatsApp after arrival. Availability and cost are agreed separately.</p>
+        {shipment.status === 'delivered' && (
+          <a href={buildWhatsAppLink('Hey NPC, my items have arrived in Nigeria. I would like to request local delivery.')} target="_blank" rel="noopener noreferrer" className="mt-4 inline-block rounded-full bg-ink px-5 py-3 text-canvas">Request delivery on WhatsApp</a>
+        )}
       </div>
 
       <Link

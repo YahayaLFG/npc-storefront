@@ -296,7 +296,7 @@ export default function ProductDetailClient({ product }) {
                     free for 7 days while you decide when to ship — combine it with other pieces
                     into one shipment any time, and pay shipping separately then.
                   </p>
-                  <p>Estimated delivery once shipped is 10–15 days.</p>
+                  <p>Collect at Chevron, Lagos after your items arrive in Nigeria. Local delivery can be requested on WhatsApp after arrival, at a separately agreed cost.</p>
                   <p>
                     Track every step from your account under{' '}
                     <Link href="/account/orders" className="text-ink underline underline-offset-2">

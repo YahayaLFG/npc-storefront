@@ -1,10 +1,8 @@
 import CheckoutClient from '@/components/CheckoutClient';
-import { getMyAddresses } from '@/lib/account/addresses';
 
 export const metadata = { title: 'Checkout — NPC' };
 
 export default async function CheckoutPage() {
-  const addresses = await getMyAddresses();
 
   return (
     <div className="mx-auto max-w-2xl px-5 py-14 md:px-8 md:py-20">
@@ -13,12 +11,12 @@ export default async function CheckoutPage() {
         Review your order
       </h1>
       <p className="mt-4 text-sm text-ink-fog">
-        Paid product first. Once each piece reaches our warehouse, you'll pay shipping separately
-        when you're ready to have it sent to you.
+        Pay for your products first, then freight to Nigeria when your shipment is ready.
+        Collect at Chevron, Lagos after arrival, or request local delivery on WhatsApp at that point.
       </p>
 
       <div className="mt-10">
-        <CheckoutClient initialAddresses={addresses} />
+        <CheckoutClient />
       </div>
     </div>
   );

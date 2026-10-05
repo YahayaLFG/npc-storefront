@@ -6,20 +6,13 @@ import { formatPrice } from '@/lib/currency';
 import { useCurrency } from './CurrencyContext';
 import { previewCheckoutFees, initiateCartCheckout } from '@/lib/account/checkout';
 import { useCart } from './CartContext';
-import AddressForm from './account/AddressForm';
 
-export default function CheckoutClient({ initialAddresses = [] }) {
+export default function CheckoutClient() {
   const { items, selectedItems, selectedTotalPrice, hydrated, lineKey } = useCart();
   const { currency } = useCurrency();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [needsAuth, setNeedsAuth] = useState(false);
-
-  const [addresses, setAddresses] = useState(initialAddresses);
-  const [selectedAddressId, setSelectedAddressId] = useState(
-    initialAddresses.find((a) => a.is_default)?.id || initialAddresses[0]?.id || null
-  );
-  const [addingAddress, setAddingAddress] = useState(initialAddresses.length === 0);
 
   // Real fee breakdown, computed server-side (previewCheckoutFees calls
   // the exact same calculateCheckoutFees() the actual charge uses, on
@@ -47,26 +40,12 @@ export default function CheckoutClient({ initialAddresses = [] }) {
 
   const paystackAmountNgn = fees ? selectedTotalPrice + fees.serviceFee + fees.fulfillmentFee : null;
 
-  function handleAddressSaved(address) {
-    setAddresses((prev) => {
-      const exists = prev.some((a) => a.id === address.id);
-      return exists ? prev.map((a) => (a.id === address.id ? address : a)) : [address, ...prev];
-    });
-    setSelectedAddressId(address.id);
-    setAddingAddress(false);
-  }
-
   async function handlePay() {
-    if (!selectedAddressId) {
-      setError('Add or select a delivery address before paying.');
-      return;
-    }
-
     setLoading(true);
     setError('');
     setNeedsAuth(false);
 
-    const result = await initiateCartCheckout(selectedItems, { addressId: selectedAddressId });
+    const result = await initiateCartCheckout(selectedItems);
 
     if (result?.error === 'not_authenticated') {
       setNeedsAuth(true);
@@ -114,55 +93,9 @@ export default function CheckoutClient({ initialAddresses = [] }) {
 
   return (
     <div className="space-y-6">
-      {/* DELIVERY ADDRESS */}
       <div className="border border-rule bg-canvas-alt p-6 text-ink">
-        <p className="text-xs uppercase tracking-wide text-ink-fog">Delivery Address</p>
-
-        {addresses.length > 0 && !addingAddress && (
-          <div className="mt-3 space-y-2">
-            {addresses.map((addr) => (
-              <label
-                key={addr.id}
-                className={`flex cursor-pointer items-start gap-3 border p-3 text-sm ${
-                  selectedAddressId === addr.id ? 'border-ink' : 'border-rule'
-                }`}
-              >
-                <input
-                  type="radio"
-                  name="address"
-                  checked={selectedAddressId === addr.id}
-                  onChange={() => setSelectedAddressId(addr.id)}
-                  className="mt-1 h-4 w-4 accent-ink"
-                />
-                <span>
-                  <span className="block text-ink">{addr.full_name} — {addr.phone}</span>
-                  <span className="block text-ink-fog">
-                    {addr.address_line_1}
-                    {addr.address_line_2 && `, ${addr.address_line_2}`}
-                  </span>
-                  <span className="block text-ink-fog">
-                    {[addr.area, addr.city, addr.state].filter(Boolean).join(', ')}
-                  </span>
-                </span>
-              </label>
-            ))}
-            <button
-              onClick={() => setAddingAddress(true)}
-              className="text-xs text-ink underline underline-offset-2"
-            >
-              + Use a different address
-            </button>
-          </div>
-        )}
-
-        {addingAddress && (
-          <div className="mt-3">
-            <AddressForm
-              onSaved={handleAddressSaved}
-              onCancel={addresses.length > 0 ? () => setAddingAddress(false) : undefined}
-            />
-          </div>
-        )}
+        <p className="text-xs uppercase tracking-wide text-ink-fog">Pickup after arrival</p>
+        <p className="mt-3 text-sm">Collect your items once they arrive in Nigeria. Pickup is at Chevron, Lagos; exact collection details will be shared when ready. If you need local delivery, request it on WhatsApp after arrival; the cost is agreed separately.</p>
       </div>
 
       {/* ITEMS + FEES */}
@@ -212,8 +145,8 @@ export default function CheckoutClient({ initialAddresses = [] }) {
           )}
 
           <div className="flex justify-between text-ink-fog">
-            <span>Delivery</span>
-            <span>Paid later, once your shipment is ready</span>
+            <span>Freight to Nigeria</span>
+            <span>Paid separately when ready to ship</span>
           </div>
           <div className="flex justify-between border-t border-rule pt-2 text-base text-ink">
             <span>Pay now</span>

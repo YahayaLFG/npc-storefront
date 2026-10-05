@@ -8,12 +8,12 @@ const FAQS = [
     a: 'Pick a piece, choose your size and color, and tap "Add to Cart." You pay for the product through Paystack, and it goes straight into your account to track.',
   },
   {
-    q: 'How long does delivery take?',
-    a: 'Once your item reaches our warehouse, it\'s stored free for 7 days while you decide when to ship. From the day you pay to ship, delivery takes about 10–15 days.',
+    q: 'How do I receive my items?',
+    a: 'Once your item reaches our warehouse, it\'s stored free for 7 days while you decide when to ship. Once your items arrive in Nigeria, pickup is at Chevron, Lagos. Exact collection details will be shared when ready. You can request local delivery on WhatsApp after arrival; availability and cost are agreed separately.',
   },
   {
     q: 'How do I pay?',
-    a: 'Through Paystack, in two separate payments: the product first, then shipping separately once you\'re ready to ship from your warehouse — you can combine several items into one shipment to save on shipping.',
+    a: 'Through Paystack, in two separate payments: the product first, then freight to Nigeria separately once you\'re ready to ship from your warehouse — you can combine several items into one shipment to save on shipping.',
   },
   {
     q: "What if I can't find something I'm looking for?",

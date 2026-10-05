@@ -128,7 +128,7 @@ export default function WarehouseClient({ items }) {
         <div>
           <h2 className="font-display text-lg text-ink">In your warehouse</h2>
           <p className="mt-1 text-sm text-ink-fog">
-            Select items below to combine into one shipment and split the shipping cost.
+            Select items to combine into one shipment to Nigeria. Collect at Chevron, Lagos after arrival, or request local delivery on WhatsApp once your items are here.
           </p>
           <div className="mt-5 space-y-3">
             {unshipped.map((item) => (
@@ -206,7 +206,7 @@ export default function WarehouseClient({ items }) {
                 className="mt-3 flex w-full items-center justify-center gap-2 rounded-full bg-ink py-3.5 text-sm font-medium text-canvas disabled:opacity-60"
               >
                 <Truck size={16} />
-                {isPending ? 'Redirecting to Paystack…' : `Ship Selected — ${formatNGN(estimatedCost)}`}
+                {isPending ? 'Redirecting to Paystack…' : `Ship to Nigeria — ${formatNGN(estimatedCost)}`}
               </button>
             )}
             {error && <p className="mt-2 text-xs text-ink-fog">{error}</p>}
