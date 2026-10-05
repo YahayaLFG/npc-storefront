@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Truck, Minus, Plus, Ruler, ChevronLeft, ChevronRight, Check } from 'lucide-react';
@@ -15,13 +15,19 @@ export default function ProductDetailClient({ product }) {
   const [activeImage, setActiveImage] = useState(0);
   const [color, setColor] = useState(product.variants[0]?.color || '');
   const currentVariant = product.variants.find((v) => v.color === color);
-  const [size, setSize] = useState(currentVariant?.sizes[0] || '');
+  const [size, setSize] = useState('');
   const [quantity, setQuantity] = useState(1);
   const [sizeGuideOpen, setSizeGuideOpen] = useState(false);
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [shippingOpen, setShippingOpen] = useState(false);
   const [added, setAdded] = useState(false);
   const touchStartX = useRef(null);
+  const addLocked = useRef(false);
+  const confirmationRef = useRef(null);
+  useEffect(() => {
+    if (added) confirmationRef.current?.showModal();
+    else confirmationRef.current?.close();
+  }, [added]);
 
   // Authoritative price for the selected variant — falls back to the
   // product's base price only when this variant has no override.
@@ -37,11 +43,7 @@ export default function ProductDetailClient({ product }) {
 
   function handleColorChange(newColor) {
     setColor(newColor);
-    const newVariant = product.variants.find((v) => v.color === newColor);
-    const firstAvailableSize = newVariant?.sizes.find(
-      (s) => !(newVariant.outOfStockSizes || []).includes(s)
-    );
-    setSize(firstAvailableSize || '');
+    setSize('');
     setActiveImage(0);
   }
 
@@ -60,27 +62,31 @@ export default function ProductDetailClient({ product }) {
   }
 
   function handleAddToCart() {
-  const isOutOfStock = (currentVariant?.outOfStockSizes || []).includes(size);
-
-  if (isOutOfStock) {
-    return;
+    if (addLocked.current || !currentVariant || !size ||
+        !currentVariant.sizes.includes(size) ||
+        (currentVariant.outOfStockSizes || []).includes(size)) return;
+    addLocked.current = true;
+    addItem({ productSlug: product.id, name: product.name, image: product.image,
+      price: unitPrice, color, size, quantity });
+    setAdded(true);
+    setColor(product.variants[0]?.color || '');
+    setSize('');
+    setQuantity(1);
+    setActiveImage(0);
+    setSizeGuideOpen(false);
+    setDetailsOpen(false);
+    setShippingOpen(false);
   }
-
-  addItem({
-    productSlug: product.id,
-    name: product.name,
-    image: product.image,
-    price: unitPrice,
-    color,
-    size,
-    quantity,
-  });
-  setAdded(true);
-  setTimeout(() => setAdded(false), 2000);
-}
 
   return (
     <div className="mx-auto max-w-6xl px-5 py-10 md:px-8 md:py-14">
+      <dialog ref={confirmationRef} onCancel={() => setAdded(false)} onClose={() => setAdded(false)} aria-labelledby="cart-confirmation-title" className="w-[calc(100%-2rem)] max-w-sm border border-rule bg-canvas p-6 text-ink backdrop:bg-black/40">
+        <Check size={28} className="mx-auto" />
+        <h2 id="cart-confirmation-title" className="mt-4 text-center font-display text-xl">Added to cart</h2>
+        <p className="mt-3 text-center text-sm text-ink-fog">Your item is in your cart. Complete checkout to place your order.</p>
+        <Link href="/cart" className="mt-6 block rounded-full bg-ink px-5 py-3 text-center text-sm text-canvas">View cart</Link>
+        <button autoFocus onClick={() => setAdded(false)} className="mt-3 w-full rounded-full border border-rule px-5 py-3 text-sm">Continue shopping</button>
+      </dialog>
       <div className="grid gap-10 md:grid-cols-2 md:gap-16">
         {/* GALLERY */}
         <div>
@@ -203,7 +209,7 @@ export default function ProductDetailClient({ product }) {
                       key={s}
                       type="button"
                       disabled={isOutOfStock}
-                      onClick={() => !isOutOfStock && setSize(s)}
+                      onClick={() => { if (!isOutOfStock) { setSize(s); addLocked.current = false; } }}
                       className={`border px-4 py-2 text-sm transition-colors ${
                         isOutOfStock
                           ? "cursor-not-allowed border-rule text-ink-fog line-through opacity-50"
@@ -249,19 +255,20 @@ export default function ProductDetailClient({ product }) {
           {/* WAREHOUSE */}
           <div className="mt-8 flex items-center gap-3 border border-rule px-4 py-3">
             <Truck size={18} className="shrink-0 text-ink-fog" />
-            <p className="text-sm text-ink">Stored free in your warehouse for 7 days once it arrives.</p>
+            <p className="text-sm text-ink">Free warehouse storage: 7 days for one paid order, 30 days for customers with two or more paid orders.</p>
           </div>
 
           <button
             onClick={handleAddToCart}
-            className="mt-8 flex w-full items-center justify-center gap-2 rounded-full bg-ink py-4 text-sm font-medium text-canvas transition-transform hover:scale-[1.01] md:w-auto md:px-10"
+            disabled={added || !size || !currentVariant || (currentVariant.outOfStockSizes || []).includes(size)}
+            className="mt-8 flex w-full items-center justify-center gap-2 rounded-full bg-ink py-4 text-sm font-medium text-canvas transition-transform hover:scale-[1.01] disabled:opacity-50 disabled:cursor-not-allowed md:w-auto md:px-10"
           >
             {added ? (
               <>
                 <Check size={16} /> Added to Cart
               </>
             ) : (
-              `Add to Cart — ${formatPrice(totalPrice, currency)}`
+              size ? `Add to Cart — ${formatPrice(totalPrice, currency)}` : 'Choose a size to add to cart'
             )}
           </button>
 
@@ -293,7 +300,7 @@ export default function ProductDetailClient({ product }) {
                 <div className="space-y-2 pb-4 text-sm leading-relaxed text-ink-fog">
                   <p>
                     You pay for the product now. Once it arrives at our warehouse, it's stored
-                    free for 7 days while you decide when to ship — combine it with other pieces
+                    free for 7 days, or 30 days with two or more paid orders, while you decide when to ship — combine it with other pieces
                     into one shipment any time, and pay shipping separately then.
                   </p>
                   <p>Collect at Chevron, Lagos after your items arrive in Nigeria. Local delivery can be requested on WhatsApp after arrival, at a separately agreed cost.</p>

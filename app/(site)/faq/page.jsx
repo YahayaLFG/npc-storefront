@@ -9,7 +9,7 @@ const FAQS = [
   },
   {
     q: 'How do I receive my items?',
-    a: 'Once your item reaches our warehouse, it\'s stored free for 7 days while you decide when to ship. Once your items arrive in Nigeria, pickup is at Chevron, Lagos. Exact collection details will be shared when ready. You can request local delivery on WhatsApp after arrival; availability and cost are agreed separately.',
+    a: 'Once your item reaches our warehouse, it\'s stored free for 7 days, or 30 days if your account has two or more paid orders, while you decide when to ship. Once your items arrive in Nigeria, pickup is at Chevron, Lagos. Exact collection details will be shared when ready. You can request local delivery on WhatsApp after arrival; availability and cost are agreed separately.',
   },
   {
     q: 'How do I pay?',
