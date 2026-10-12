@@ -677,7 +677,7 @@ export default function ProductForm({ initial }) {
                     {v.images.map((src, imgIdx) => (
                       <div key={src + imgIdx} className="relative">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={src} alt="" className="h-16 w-14 border border-line object-cover" />
+                        <img src={src} alt="" className="h-16 w-14 border border-line bg-panel object-contain" />
                         <button
                           type="button"
                           onClick={() => removeVariantImage(i, imgIdx)}
@@ -837,7 +837,7 @@ export default function ProductForm({ initial }) {
               {images.map((src, i) => (
                 <div key={src + i} className="relative">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={src} alt="" className="h-24 w-20 border border-line object-cover" />
+                  <img src={src} alt="" className="h-24 w-20 border border-line bg-panel object-contain" />
                   {i === 0 && (
                     <span className="absolute bottom-0 left-0 right-0 bg-black/80 py-0.5 text-center text-[9px] uppercase tracking-wide text-bone">
                       Main

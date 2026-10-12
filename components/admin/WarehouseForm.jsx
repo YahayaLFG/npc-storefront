@@ -110,7 +110,7 @@ export default function WarehouseForm({ orderId, warehouseItem }) {
           {photos.map((src, i) => (
             <div key={src + i} className="relative">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={src} alt="" className="h-24 w-24 border border-line object-cover" />
+              <img src={src} alt="" className="h-24 w-24 border border-line bg-panel object-contain" />
               <button
                 type="button"
                 onClick={() => setPhotos((prev) => prev.filter((_, idx) => idx !== i))}

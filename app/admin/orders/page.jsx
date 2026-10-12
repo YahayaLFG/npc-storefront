@@ -70,7 +70,7 @@ export default async function AdminOrdersPage({ searchParams }) {
               <div className="h-16 w-14 shrink-0 overflow-hidden bg-panel">
                 {order.product_image && (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img src={order.product_image} alt="" className="h-full w-full object-cover" />
+                  <img src={order.product_image} alt="" className="h-full w-full object-contain" />
                 )}
               </div>
               <div className="min-w-0 flex-1">

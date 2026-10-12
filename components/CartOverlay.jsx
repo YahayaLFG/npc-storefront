@@ -84,7 +84,7 @@ export default function CartOverlay({ open, onClose }) {
                     <div className="h-24 w-20 shrink-0 overflow-hidden bg-panel">
                       {item.image && (
                         // eslint-disable-next-line @next/next/no-img-element
-                        <img src={item.image} alt={item.name} className="h-full w-full object-cover" />
+                        <img src={item.image} alt={item.name} className="h-full w-full object-contain" />
                       )}
                     </div>
                     <div className="flex-1">

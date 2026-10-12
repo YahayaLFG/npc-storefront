@@ -27,7 +27,7 @@ export default async function AdminDashboardPage() {
               <div className="h-16 w-14 shrink-0 overflow-hidden bg-panel">
                 {p.image && (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img src={p.image} alt="" className="h-full w-full object-cover" />
+                  <img src={p.image} alt="" className="h-full w-full object-contain" />
                 )}
               </div>
 

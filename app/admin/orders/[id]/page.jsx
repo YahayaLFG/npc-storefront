@@ -59,7 +59,7 @@ export default async function AdminOrderDetailPage({ params }) {
           <div className="mt-3 flex gap-4">
             {order.product_image && (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={order.product_image} alt="" className="h-24 w-20 object-cover" />
+              <img src={order.product_image} alt="" className="h-24 w-20 bg-panel object-contain" />
             )}
             <div className="text-sm">
               <p>{order.product_name}</p>

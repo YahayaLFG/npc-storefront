@@ -104,7 +104,7 @@ export default function CheckoutClient() {
           {selectedItems.map((item) => (
             <div key={lineKey(item)} className="flex gap-4 border-b border-rule pb-4 last:border-b-0 last:pb-0">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={item.image} alt={item.name} className="h-20 w-16 object-cover" />
+              <img src={item.image} alt={item.name} className="h-20 w-16 bg-canvas object-contain" />
               <div className="flex-1">
                 <p className="text-sm text-ink">{item.name}</p>
                 <p className="mt-1 text-xs text-ink-fog">

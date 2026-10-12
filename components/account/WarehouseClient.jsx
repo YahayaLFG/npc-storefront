@@ -40,7 +40,7 @@ function WarehouseItemCard({ item, selected, onToggle, isPending }) {
       <div className="h-20 w-16 shrink-0 overflow-hidden bg-canvas-alt">
         {(item.photos?.[0] || item.orders?.product_image) && (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={item.photos?.[0] || item.orders?.product_image} alt="" className="h-full w-full object-cover" />
+          <img src={item.photos?.[0] || item.orders?.product_image} alt="" className="h-full w-full object-contain" />
         )}
       </div>
 
@@ -157,7 +157,7 @@ export default function WarehouseClient({ items }) {
                 <div className="h-16 w-14 shrink-0 overflow-hidden bg-canvas-alt">
                   {item.orders?.product_image && (
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img src={item.orders.product_image} alt="" className="h-full w-full object-cover" />
+                    <img src={item.orders.product_image} alt="" className="h-full w-full object-contain" />
                   )}
                 </div>
                 <div className="flex-1">

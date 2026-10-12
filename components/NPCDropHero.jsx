@@ -97,7 +97,7 @@ export default function NPCDropHero({ products = [] }) {
             <img
               src={items[0].image}
               alt=""
-              className="h-full w-full object-cover opacity-20 grayscale transition-transform duration-[1400ms] group-hover:scale-105"
+              className="h-full w-full object-contain object-center opacity-20 grayscale"
             />
           </div>
 
@@ -153,7 +153,7 @@ export default function NPCDropHero({ products = [] }) {
             key={activeProduct.id}
             src={activeProduct.image}
             alt=""
-            className="h-full w-full object-cover transition-opacity duration-500"
+            className="h-full w-full object-contain object-center transition-opacity duration-500"
           />
           <div className="absolute inset-0 bg-black/20" />
         </div>

@@ -21,13 +21,19 @@ export default function ProductDetailClient({ product }) {
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [shippingOpen, setShippingOpen] = useState(false);
   const [added, setAdded] = useState(false);
+  const [zoomOpen, setZoomOpen] = useState(false);
   const touchStartX = useRef(null);
   const addLocked = useRef(false);
   const confirmationRef = useRef(null);
+  const zoomDialogRef = useRef(null);
   useEffect(() => {
     if (added) confirmationRef.current?.showModal();
     else confirmationRef.current?.close();
   }, [added]);
+  useEffect(() => {
+    if (zoomOpen) zoomDialogRef.current?.showModal();
+    else zoomDialogRef.current?.close();
+  }, [zoomOpen]);
 
   // Authoritative price for the selected variant — falls back to the
   // product's base price only when this variant has no override.
@@ -91,18 +97,26 @@ export default function ProductDetailClient({ product }) {
         {/* GALLERY */}
         <div>
           <div
-            className="reticle relative aspect-[4/5] w-full touch-pan-y overflow-hidden bg-canvas-alt text-ink"
+            className="reticle relative flex min-h-[24rem] w-full touch-pan-y items-center justify-center overflow-hidden bg-canvas-alt text-ink md:min-h-[36rem]"
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
           >
-            <Image
-              src={gallery[activeImage]}
-              alt={product.name}
-              fill
-              sizes="(max-width: 768px) 100vw, 50vw"
-              className="object-cover"
-              priority
-            />
+            <button
+              type="button"
+              onClick={() => setZoomOpen(true)}
+              aria-label={`Zoom image of ${product.name}`}
+              className="flex min-h-[24rem] max-h-[80vh] w-full items-center justify-center md:min-h-[36rem]"
+            >
+              <Image
+                src={gallery[activeImage]}
+                alt={product.name}
+                width={1200}
+                height={1600}
+                sizes="(max-width: 768px) 100vw, 50vw"
+                className="max-h-[80vh] w-auto max-w-full object-contain object-center"
+                priority
+              />
+            </button>
             {gallery.length > 1 && (
               <>
                 <button
@@ -141,7 +155,7 @@ export default function ProductDetailClient({ product }) {
                   }`}
                   aria-label={`Show image ${i + 1}`}
                 >
-                  <Image src={src} alt="" fill sizes="80px" className="object-cover" />
+                  <Image src={src} alt="" fill sizes="80px" className="object-contain object-center" />
                 </button>
               ))}
             </div>
@@ -317,6 +331,33 @@ export default function ProductDetailClient({ product }) {
           </div>
         </div>
       </div>
+      <dialog
+        ref={zoomDialogRef}
+        onCancel={() => setZoomOpen(false)}
+        onClose={() => setZoomOpen(false)}
+        onClick={(event) => {
+          if (event.target === zoomDialogRef.current) setZoomOpen(false);
+        }}
+        aria-label={`Full resolution image of ${product.name}`}
+        className="fixed inset-0 m-auto h-screen max-h-screen w-screen max-w-none border-0 bg-black/95 p-3 text-white backdrop:bg-black/90 md:p-8"
+      >
+        <button
+          type="button"
+          autoFocus
+          onClick={() => setZoomOpen(false)}
+          aria-label="Close zoomed image"
+          className="absolute right-4 top-4 z-10 rounded-full bg-black/70 px-4 py-2 text-sm text-white"
+        >
+          Close
+        </button>
+        {/* Use the stored source URL directly so zoom opens the original upload. */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={gallery[activeImage]}
+          alt={product.name}
+          className="mx-auto h-full max-h-full w-full max-w-full object-contain"
+        />
+      </dialog>
     </div>
   );
 }

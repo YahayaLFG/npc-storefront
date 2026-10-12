@@ -14,7 +14,7 @@ export default function ProductCard({ product, index = 0 }) {
           alt={product.name}
           fill
           sizes="(max-width: 768px) 50vw, 25vw"
-          className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+          className="object-contain object-center"
         />
         {(product.isNewArrival || product.isFeatured) && (
           <span className="absolute left-3 top-3 bg-canvas/90 px-2 py-1 font-mono text-[9px] uppercase tracking-widest text-ink">

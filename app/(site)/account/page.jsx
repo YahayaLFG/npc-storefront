@@ -71,7 +71,7 @@ export default async function AccountPage() {
                 <div className="h-16 w-14 shrink-0 overflow-hidden bg-canvas-alt">
                   {order.product_image && (
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img src={order.product_image} alt="" className="h-full w-full object-cover" />
+                    <img src={order.product_image} alt="" className="h-full w-full object-contain" />
                   )}
                 </div>
                 <div className="flex-1">

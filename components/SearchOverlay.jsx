@@ -72,7 +72,7 @@ export default function SearchOverlay({ open, onClose }) {
                   <img
                     src={product.image}
                     alt={product.name}
-                    className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+                    className="h-full w-full object-contain object-center"
                   />
                 )}
               </div>

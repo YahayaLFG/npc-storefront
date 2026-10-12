@@ -33,7 +33,7 @@ export default async function MyOrdersPage() {
               <div className="h-20 w-16 shrink-0 overflow-hidden bg-canvas-alt">
                 {order.product_image && (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img src={order.product_image} alt="" className="h-full w-full object-cover" />
+                  <img src={order.product_image} alt="" className="h-full w-full object-contain" />
                 )}
               </div>
               <div className="flex-1">

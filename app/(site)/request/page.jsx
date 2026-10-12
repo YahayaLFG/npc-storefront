@@ -80,7 +80,7 @@ export default function RequestPage() {
 
           {preview ? (
             <div className="relative mt-3 w-fit">
-              <img src={preview} alt="Uploaded reference preview" className="h-40 border border-rule object-cover" />
+              <img src={preview} alt="Uploaded reference preview" className="h-40 border border-rule bg-canvas-alt object-contain" />
               <button
                 type="button"
                 onClick={() => {

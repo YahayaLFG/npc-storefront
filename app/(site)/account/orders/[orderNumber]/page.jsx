@@ -51,7 +51,7 @@ export default async function OrderDetailPage({ params, searchParams }) {
       <div className="mt-8 flex gap-4 border border-rule bg-canvas-alt p-5">
         {order.product_image && (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={order.product_image} alt="" className="h-24 w-20 object-cover" />
+          <img src={order.product_image} alt="" className="h-24 w-20 bg-canvas object-contain" />
         )}
         <div className="flex-1">
           <p className="text-sm text-ink">
@@ -76,7 +76,7 @@ export default async function OrderDetailPage({ params, searchParams }) {
             <div className="mt-4 flex gap-3 overflow-x-auto">
               {warehouseItem.photos.map((src, i) => (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img key={i} src={src} alt="" className="h-24 w-24 shrink-0 object-cover" />
+                <img key={i} src={src} alt="" className="h-24 w-24 shrink-0 object-contain" />
               ))}
             </div>
           )}

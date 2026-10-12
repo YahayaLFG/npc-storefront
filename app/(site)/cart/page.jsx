@@ -191,7 +191,7 @@ export default function CartPage() {
                       />
                     </label>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={item.image} alt={item.name} className="h-28 w-22 object-cover" />
+                    <img src={item.image} alt={item.name} className="h-28 w-22 bg-canvas-alt object-contain" />
                     <div className="flex flex-1 flex-col justify-between">
                       <div>
                         <p className="text-sm text-ink">{item.name}</p>
