@@ -97,7 +97,7 @@ export default function ProductDetailClient({ product }) {
         {/* GALLERY */}
         <div>
           <div
-            className="reticle relative flex min-h-[24rem] w-full touch-pan-y items-center justify-center overflow-hidden bg-canvas-alt text-ink md:min-h-[36rem]"
+            className="reticle relative aspect-[4/5] w-full touch-pan-y overflow-hidden bg-canvas-alt text-ink"
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
           >
@@ -105,15 +105,14 @@ export default function ProductDetailClient({ product }) {
               type="button"
               onClick={() => setZoomOpen(true)}
               aria-label={`Zoom image of ${product.name}`}
-              className="flex min-h-[24rem] max-h-[80vh] w-full items-center justify-center md:min-h-[36rem]"
+              className="absolute inset-0 h-full w-full cursor-zoom-in"
             >
               <Image
                 src={gallery[activeImage]}
                 alt={product.name}
-                width={1200}
-                height={1600}
+                fill
                 sizes="(max-width: 768px) 100vw, 50vw"
-                className="max-h-[80vh] w-auto max-w-full object-contain object-center"
+                className="object-contain object-center"
                 priority
               />
             </button>
