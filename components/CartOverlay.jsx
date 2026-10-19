@@ -84,7 +84,7 @@ export default function CartOverlay({ open, onClose }) {
                     <div className="h-24 w-20 shrink-0 overflow-hidden bg-panel">
                       {item.image && (
                         // eslint-disable-next-line @next/next/no-img-element
-                        <img src={item.image} alt={item.name} className="h-full w-full object-contain" />
+                        <img src={item.image} alt={item.name} className="h-full w-full object-cover" />
                       )}
                     </div>
                     <div className="flex-1">
@@ -92,7 +92,7 @@ export default function CartOverlay({ open, onClose }) {
                       <p className="mt-1 text-xs text-mute">
                         {item.color} · {item.size}
                       </p>
-                      <p className="mt-1 font-mono text-sm text-bone">{formatPrice(item.price, currency)}</p>
+                      <p className="mt-1 font-body text-sm font-semibold tracking-normal text-bone">{formatPrice(item.price, currency)}</p>
 
                       <div className="mt-3 flex items-center gap-4">
                         <div className="flex items-center gap-3 rounded-full border border-line px-2 py-1">

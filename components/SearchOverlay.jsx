@@ -72,7 +72,7 @@ export default function SearchOverlay({ open, onClose }) {
                   <img
                     src={product.image}
                     alt={product.name}
-                    className="h-full w-full object-contain object-center"
+                    className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
                   />
                 )}
               </div>
@@ -81,7 +81,7 @@ export default function SearchOverlay({ open, onClose }) {
                   {product.category}
                 </span>
                 <h3 className="text-sm text-bone">{product.name}</h3>
-                <span className="font-mono text-xs text-fog">{formatNGN(product.price)}</span>
+                <span className="font-body text-sm font-semibold tracking-normal text-fog">{formatNGN(product.price)}</span>
               </div>
             </a>
           ))}

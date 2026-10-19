@@ -44,6 +44,9 @@ export default function ProductDetailClient({ product }) {
     : product.gallery?.length
       ? product.gallery
       : [product.image];
+  const preloadIndices = gallery.length > 1
+    ? [...new Set([(activeImage + 1) % gallery.length, (activeImage - 1 + gallery.length) % gallery.length])]
+    : [];
 
   const sizeGuides = currentVariant?.sizeGuides || [];
 
@@ -104,18 +107,37 @@ export default function ProductDetailClient({ product }) {
             <button
               type="button"
               onClick={() => setZoomOpen(true)}
+              onKeyDown={(event) => {
+                if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') {
+                  event.preventDefault();
+                  goTo(event.key === 'ArrowRight' ? 1 : -1);
+                }
+              }}
               aria-label={`Zoom image of ${product.name}`}
               className="absolute inset-0 h-full w-full cursor-zoom-in"
             >
               <Image
+                key={`${activeImage}-${gallery[activeImage]}`}
                 src={gallery[activeImage]}
                 alt={product.name}
                 fill
                 sizes="(max-width: 768px) 100vw, 50vw"
-                className="object-contain object-center"
+                className="gallery-image-enter object-cover"
                 priority
               />
             </button>
+            {preloadIndices.map((index) => (
+              <Image
+                key={`preload-${index}-${gallery[index]}`}
+                src={gallery[index]}
+                alt=""
+                fill
+                sizes="(max-width: 768px) 100vw, 50vw"
+                loading="eager"
+                aria-hidden="true"
+                className="pointer-events-none object-cover opacity-0"
+              />
+            ))}
             {gallery.length > 1 && (
               <>
                 <button
@@ -154,7 +176,7 @@ export default function ProductDetailClient({ product }) {
                   }`}
                   aria-label={`Show image ${i + 1}`}
                 >
-                  <Image src={src} alt="" fill sizes="80px" className="object-contain object-center" />
+                  <Image src={src} alt="" fill sizes="80px" className="object-cover" />
                 </button>
               ))}
             </div>
@@ -171,7 +193,7 @@ export default function ProductDetailClient({ product }) {
             {product.name}
           </h1>
 
-          <p className="mt-4 font-mono text-xl text-ink">{formatPrice(unitPrice, currency)}</p>
+          <p className="mt-3 font-body text-xl font-semibold tracking-normal text-ink">{formatPrice(unitPrice, currency)}</p>
 
           <p className="mt-6 max-w-md text-sm leading-relaxed text-ink-fog">{product.description}</p>
 

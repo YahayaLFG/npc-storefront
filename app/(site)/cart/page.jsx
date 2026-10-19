@@ -191,14 +191,14 @@ export default function CartPage() {
                       />
                     </label>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={item.image} alt={item.name} className="h-28 w-22 bg-canvas-alt object-contain" />
+                    <img src={item.image} alt={item.name} className="h-28 w-22 bg-canvas-alt object-cover" />
                     <div className="flex flex-1 flex-col justify-between">
                       <div>
                         <p className="text-sm text-ink">{item.name}</p>
                         <p className="mt-1 text-xs text-ink-fog">
                           {item.color} · {item.size}
                         </p>
-                        <p className="mt-1 font-mono text-sm text-ink">{formatPrice(item.price, currency)}</p>
+                        <p className="mt-1 font-body text-sm font-semibold tracking-normal text-ink">{formatPrice(item.price, currency)}</p>
                       </div>
                       <div className="mt-3 flex flex-wrap items-center gap-4">
                         <div className="flex items-center gap-3 rounded-full border border-rule px-2 py-1">
@@ -234,7 +234,7 @@ export default function CartPage() {
                         </button>
                       </div>
                     </div>
-                    <span className="font-mono text-sm text-ink">{formatPrice(item.price * item.quantity, currency)}</span>
+                    <span className="font-body text-sm font-semibold tracking-normal text-ink">{formatPrice(item.price * item.quantity, currency)}</span>
                   </div>
 
                   {isEditing && (

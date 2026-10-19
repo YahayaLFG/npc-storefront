@@ -14,7 +14,7 @@ export default function ProductCard({ product, index = 0 }) {
           alt={product.name}
           fill
           sizes="(max-width: 768px) 50vw, 25vw"
-          className="object-contain object-center"
+          className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
         />
         {(product.isNewArrival || product.isFeatured) && (
           <span className="absolute left-3 top-3 bg-canvas/90 px-2 py-1 font-mono text-[9px] uppercase tracking-widest text-ink">
@@ -28,8 +28,10 @@ export default function ProductCard({ product, index = 0 }) {
           {product.category}
           {product.authenticityTag && ` · ${product.authenticityTag}`}
         </span>
-        <h3 className="font-display text-base text-ink">{product.name}</h3>
-        <span className="font-mono text-sm text-ink-fog">
+        <h3 className="font-display text-base font-semibold leading-snug tracking-tight text-ink md:text-lg">
+          {product.name}
+        </h3>
+        <span className="font-body text-sm font-semibold tracking-normal text-ink">
           {pricesDiffer ? (
             <>
               From <CurrencyPrice amountNgn={range.min} />

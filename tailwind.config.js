@@ -7,8 +7,8 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        canvas: '#f5f3ee',
-        'canvas-alt': '#ece9e2',
+        canvas: '#ffffff',
+        'canvas-alt': '#ffffff',
         ink: '#141311',
         'ink-fog': '#6f6c64',
         rule: '#ddd9d0',
@@ -17,7 +17,7 @@ module.exports = {
         panel: '#141414',
         'panel-light': '#1c1c1c',
         line: '#272727',
-        bone: '#f2f0ea',
+        bone: '#ffffff',
         fog: '#a6a49e',
         mute: '#6f6e69',
       },
