@@ -334,7 +334,7 @@ export default function ProductDetailClient({ product }) {
               {shippingOpen && (
                 <div className="space-y-2 pb-4 text-sm leading-relaxed text-ink-fog">
                   <p>
-                    You pay for the product now. Once it arrives at our warehouse, it's stored
+                    You pay for the product now. Once it arrives at our warehouse, it&apos;s stored
                     free for 7 days, or 30 days with two or more paid orders, while you decide when to ship — combine it with other pieces
                     into one shipment any time, and pay shipping separately then.
                   </p>

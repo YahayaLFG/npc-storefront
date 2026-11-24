@@ -3,7 +3,8 @@
 import { useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { signup } from '@/lib/account/auth';
+import { resendSignupConfirmation, signup } from '@/lib/account/auth';
+import { captureUserFacingError } from '@/lib/user-facing-error';
 
 export default function SignupForm() {
   const searchParams = useSearchParams();
@@ -14,15 +15,39 @@ export default function SignupForm() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [pendingEmail, setPendingEmail] = useState('');
+  const [resendMessage, setResendMessage] = useState('');
+  const [resending, setResending] = useState(false);
 
   async function handleSubmit(e) {
     e.preventDefault();
     setLoading(true);
     setError('');
-    const result = await signup({ email, password, fullName, redirectTo });
-    if (result?.error) {
-      setError(result.error);
+    try {
+      const result = await signup({ email, password, fullName, redirectTo });
+      if (result?.error) {
+        setError(result.error);
+      } else if (result?.confirmationRequired) {
+        setPendingEmail(result.email);
+        setPassword('');
+      }
+    } catch (err) {
+      setError(captureUserFacingError(err, 'account.signup_action', 'We could not create your account. Please try again.'));
+    } finally {
       setLoading(false);
+    }
+  }
+
+  async function handleResend() {
+    setResending(true);
+    setResendMessage('');
+    try {
+      const result = await resendSignupConfirmation(pendingEmail);
+      setResendMessage(result?.error || 'If that address has a pending signup, a new confirmation email is on its way.');
+    } catch (err) {
+      setResendMessage(captureUserFacingError(err, 'account.resend_confirmation_action', 'We could not resend the email. Please try again shortly.'));
+    } finally {
+      setResending(false);
     }
   }
 
@@ -31,7 +56,18 @@ export default function SignupForm() {
       <p className="font-mono text-xs uppercase tracking-[0.3em] text-ink-fog">New here</p>
       <h1 className="mt-3 font-display text-3xl font-medium tracking-tight text-ink">Create an account</h1>
 
-      <form onSubmit={handleSubmit} className="mt-8 space-y-5">
+      {pendingEmail ? (
+        <div className="mt-8 space-y-4 text-sm text-ink-fog" role="status" aria-live="polite">
+          <p>Check your inbox for a confirmation link sent to <strong className="font-semibold text-ink">{pendingEmail}</strong>. Confirm your email to finish creating your account.</p>
+          <button type="button" onClick={handleResend} disabled={resending} className="text-ink underline underline-offset-2 disabled:opacity-60">
+            {resending ? 'Sending…' : 'Resend confirmation email'}
+          </button>
+          {resendMessage && <p>{resendMessage}</p>}
+          <p><Link href={`/login?redirect=${encodeURIComponent(redirectTo)}`} className="text-ink underline underline-offset-2">Back to sign in</Link></p>
+        </div>
+      ) : (
+      <>
+        <form onSubmit={handleSubmit} className="mt-8 space-y-5">
         <div>
           <label htmlFor="fullName" className="text-xs uppercase tracking-wide text-ink-fog">Full name</label>
           <input
@@ -74,17 +110,19 @@ export default function SignupForm() {
         >
           {loading ? 'Creating account…' : 'Create account'}
         </button>
-      </form>
+        </form>
 
-      <p className="mt-6 text-center text-sm text-ink-fog">
-        Already have an account?{' '}
-        <Link
-          href={`/login?redirect=${encodeURIComponent(redirectTo)}`}
-          className="text-ink hover:underline"
-        >
-          Sign in
-        </Link>
-      </p>
+        <p className="mt-6 text-center text-sm text-ink-fog">
+          Already have an account?{' '}
+          <Link
+            href={`/login?redirect=${encodeURIComponent(redirectTo)}`}
+            className="text-ink hover:underline"
+          >
+            Sign in
+          </Link>
+        </p>
+      </>
+      )}
     </div>
   );
 }

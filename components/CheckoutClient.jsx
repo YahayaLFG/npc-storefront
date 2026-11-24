@@ -25,6 +25,7 @@ export default function CheckoutClient() {
 
   useEffect(() => {
     let cancelled = false;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Show loading while the server recalculates fees for the changed cart.
     setFeesLoading(true);
     previewCheckoutFees(selectedItems)
       .then((result) => {

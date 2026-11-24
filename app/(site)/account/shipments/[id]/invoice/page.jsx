@@ -4,7 +4,8 @@ import { formatNGN } from '@/lib/format';
 import PrintButton from '@/components/admin/PrintButton';
 
 export default async function ShipmentInvoicePage({ params }) {
-  const shipment = await getMyShipmentById(params.id);
+  const { id } = await params;
+  const shipment = await getMyShipmentById(id);
   if (!shipment) notFound();
 
   return (

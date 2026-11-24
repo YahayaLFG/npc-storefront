@@ -12,6 +12,7 @@ export function CurrencyProvider({ children }) {
   useEffect(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- Restore the saved currency after client hydration.
       if (saved === 'NGN' || saved === 'USD') setCurrency(saved);
     } catch {
       // Inaccessible storage — just stay on the NGN default for this session.

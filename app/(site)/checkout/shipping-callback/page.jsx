@@ -3,7 +3,8 @@ import Link from 'next/link';
 import { confirmShipmentPayment } from '@/lib/account/paymentVerification';
 
 export default async function ShippingCallbackPage({ searchParams }) {
-  const reference = searchParams?.reference || searchParams?.trxref;
+  const query = await searchParams;
+  const reference = query?.reference || query?.trxref;
 
   if (!reference) {
     return (
@@ -25,7 +26,7 @@ export default async function ShippingCallbackPage({ searchParams }) {
   return (
     <div className="mx-auto max-w-lg px-5 py-24 text-center">
       <p className="font-mono text-xs uppercase tracking-widest text-ink-fog">Payment issue</p>
-      <h1 className="mt-3 font-display text-2xl text-ink">We couldn't confirm this payment.</h1>
+      <h1 className="mt-3 font-display text-2xl text-ink">We couldn&apos;t confirm this payment.</h1>
       <p className="mt-3 text-ink-fog">{result.error}</p>
       <Link href="/account/warehouse" className="mt-6 inline-block text-ink hover:underline">
         Back to my warehouse

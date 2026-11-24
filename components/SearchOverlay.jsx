@@ -13,8 +13,6 @@ export default function SearchOverlay({ open, onClose }) {
   useEffect(() => {
     document.body.style.overflow = open ? 'hidden' : '';
     if (open) {
-      setQuery('');
-      setResults([]);
       setTimeout(() => inputRef.current?.focus(), 50);
     }
     return () => {
@@ -24,11 +22,10 @@ export default function SearchOverlay({ open, onClose }) {
 
   useEffect(() => {
     if (!query.trim()) {
-      setResults([]);
       return;
     }
-    setLoading(true);
     const handle = setTimeout(() => {
+      setLoading(true);
       fetch(`/api/search?q=${encodeURIComponent(query)}`)
         .then((res) => res.json())
         .then((data) => setResults(data.results ?? []))
@@ -47,7 +44,14 @@ export default function SearchOverlay({ open, onClose }) {
         <input
           ref={inputRef}
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          onChange={(e) => {
+            const value = e.target.value;
+            setQuery(value);
+            if (!value.trim()) {
+              setResults([]);
+              setLoading(false);
+            }
+          }}
           placeholder="Search products, categories, colors…"
           className="w-full bg-transparent font-display text-xl placeholder:text-mute focus:outline-none md:text-2xl"
         />
@@ -60,11 +64,11 @@ export default function SearchOverlay({ open, onClose }) {
         {loading && <p className="text-sm text-mute">Searching…</p>}
 
         {!loading && query.trim() && results.length === 0 && (
-          <p className="text-sm text-mute">Nothing matches "{query}".</p>
+          <p className="text-sm text-mute">Nothing matches &quot;{query}&quot;.</p>
         )}
 
         <div className="grid grid-cols-2 gap-x-4 gap-y-8 md:grid-cols-4 md:gap-x-8">
-          {results.map((product) => (
+          {(query.trim() ? results : []).map((product) => (
             <a key={product.id} href={`/product/${product.id}`} onClick={onClose} className="group flex flex-col">
               <div className="relative aspect-[4/5] w-full overflow-hidden bg-panel">
                 {product.image && (

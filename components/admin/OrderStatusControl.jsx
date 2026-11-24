@@ -4,6 +4,7 @@ import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { ORDER_STATUSES, orderStatusIndex } from '@/lib/orderStatus';
 import { updateOrderStatus } from '@/lib/admin/orders';
+import { captureUserFacingError } from '@/lib/user-facing-error';
 
 export default function OrderStatusControl({ orderId, currentStatus }) {
   const router = useRouter();
@@ -22,7 +23,7 @@ export default function OrderStatusControl({ orderId, currentStatus }) {
         setStatus(value);
         router.refresh();
       } catch (err) {
-        setError(err.message);
+        setError(captureUserFacingError(err, 'admin.update_order_status', 'Could not update this order. Please try again.'));
       }
     });
   }
@@ -57,7 +58,7 @@ export default function OrderStatusControl({ orderId, currentStatus }) {
             disabled={isPending}
             className="rounded-full border border-line px-5 py-2.5 text-xs text-bone disabled:opacity-40"
           >
-            Advance to "{nextStatus.label}" →
+            Advance to &quot;{nextStatus.label}&quot; →
           </button>
         )}
       </div>

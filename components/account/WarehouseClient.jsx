@@ -1,11 +1,12 @@
 'use client';
 
-import { useState, useMemo, useTransition } from 'react';
+import { useState, useTransition } from 'react';
 import Link from 'next/link';
 import { Truck } from 'lucide-react';
 import { formatNGN } from '@/lib/format';
 import { COURIERS, calculateShippingCost } from '@/lib/shipping';
 import { extendMyStorage, initiateShipmentCheckout } from '@/lib/account/warehouse';
+import { captureUserFacingError } from '@/lib/user-facing-error';
 
 function daysLeftFor(item) {
   const expiry =
@@ -21,7 +22,7 @@ function WarehouseItemCard({ item, selected, onToggle, isPending }) {
     setExtending(true);
     extendMyStorage(item.id, 7)
       .then(() => window.location.reload())
-      .catch((err) => alert(err.message))
+      .catch((err) => alert(captureUserFacingError(err, 'account.extend_storage', 'Could not update storage. Please try again.')))
       .finally(() => setExtending(false));
   }
 
@@ -92,7 +93,7 @@ export default function WarehouseClient({ items }) {
 
   const selectedItems = unshipped.filter((i) => selected.includes(i.id));
   const totalWeight = selectedItems.reduce((sum, i) => sum + (Number(i.weight_kg) || 0), 0);
-  const estimatedCost = useMemo(() => calculateShippingCost(totalWeight, courier), [totalWeight, courier]);
+  const estimatedCost = calculateShippingCost(totalWeight, courier);
   const missingWeight = selectedItems.some((i) => !i.weight_kg);
 
   function handleShip() {
@@ -196,7 +197,7 @@ export default function WarehouseClient({ items }) {
 
             {missingWeight ? (
               <p className="mt-3 text-xs text-ink-fog">
-                One or more selected items don't have a weight yet — remove them or wait for warehouse
+                One or more selected items don&apos;t have a weight yet — remove them or wait for warehouse
                 measurement.
               </p>
             ) : (

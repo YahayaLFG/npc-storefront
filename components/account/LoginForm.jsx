@@ -8,6 +8,7 @@ import { login } from '@/lib/account/auth';
 export default function LoginForm() {
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get('redirect') || '/account';
+  const verificationFailed = searchParams.get('error') === 'auth_callback';
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -29,6 +30,12 @@ export default function LoginForm() {
     <div className="mx-auto max-w-sm px-5 py-20 md:px-8">
       <p className="font-mono text-xs uppercase tracking-[0.3em] text-ink-fog">Welcome back</p>
       <h1 className="mt-3 font-display text-3xl font-medium tracking-tight text-ink">Sign in</h1>
+
+      {verificationFailed && (
+        <p className="mt-4 text-sm text-ink-fog" role="alert">
+          That confirmation link is invalid or expired. Create a new account request or ask for another confirmation email.
+        </p>
+      )}
 
       <form onSubmit={handleSubmit} className="mt-8 space-y-5">
         <div>

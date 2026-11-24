@@ -6,7 +6,8 @@ import CurrencyPrice from '@/components/CurrencyPrice';
 import ClearPurchasedCartItems from '@/components/ClearPurchasedCartItems';
 
 export default async function CheckoutConfirmationPage({ searchParams }) {
-  const reference = searchParams?.ref;
+  const query = await searchParams;
+  const reference = query?.ref;
 
   if (!reference) {
     return (
@@ -19,7 +20,7 @@ export default async function CheckoutConfirmationPage({ searchParams }) {
     );
   }
 
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const { data: batch } = await supabase
     .from('order_batches')
@@ -30,7 +31,7 @@ export default async function CheckoutConfirmationPage({ searchParams }) {
   if (!batch) {
     return (
       <div className="mx-auto max-w-lg px-5 py-24 text-center">
-        <h1 className="font-display text-2xl text-ink">We couldn't find that payment.</h1>
+        <h1 className="font-display text-2xl text-ink">We couldn&apos;t find that payment.</h1>
         <Link href="/account/orders" className="mt-6 inline-block text-ink hover:underline">
           Go to My Orders
         </Link>

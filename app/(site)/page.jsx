@@ -55,7 +55,7 @@ const heroProducts = [...featured, ...newArrivals, ...men, ...women, ...accessor
             Quiet flex only
           </p>
           <h2 className="mx-auto mt-4 max-w-lg font-display text-3xl font-medium tracking-tight text-ink md:text-4xl">
-            Seen something we don't carry?
+            Seen something we don&apos;t carry?
           </h2>
           <Link
             href="/request"

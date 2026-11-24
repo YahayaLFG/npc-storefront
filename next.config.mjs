@@ -1,7 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  eslint: {
-    ignoreDuringBuilds: true,
+  productionBrowserSourceMaps: false,
+  turbopack: {
+    root: process.cwd(),
   },
   images: {
     remotePatterns: [

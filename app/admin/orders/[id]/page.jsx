@@ -6,7 +6,8 @@ import OrderStatusControl from '@/components/admin/OrderStatusControl';
 import WarehouseForm from '@/components/admin/WarehouseForm';
 
 export default async function AdminOrderDetailPage({ params }) {
-  const order = await getOrderDetailAdmin(params.id);
+  const { id } = await params;
+  const order = await getOrderDetailAdmin(id);
   if (!order) notFound();
 
   return (

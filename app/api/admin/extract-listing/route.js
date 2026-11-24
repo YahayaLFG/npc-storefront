@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { requireAdmin, extractFromImage } from '@/lib/admin/extract';
 import { getRecentProductsForStyle } from '@/lib/admin/products';
+import { publicError } from '@/lib/server-error';
 
 async function buildPrompt() {
   const recent = await getRecentProductsForStyle(6);
@@ -48,6 +49,6 @@ export async function POST(request) {
     const extracted = await extractFromImage({ base64, mediaType, prompt });
     return NextResponse.json(extracted);
   } catch (err) {
-    return NextResponse.json({ error: err.message }, { status: 500 });
+    return NextResponse.json(publicError('admin.extract-listing', err, 'Could not read that image.'), { status: 500 });
   }
 }

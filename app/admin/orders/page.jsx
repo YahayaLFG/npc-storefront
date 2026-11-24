@@ -4,8 +4,9 @@ import { ORDER_STATUSES, orderStatusLabel } from '@/lib/orderStatus';
 import { formatNGN } from '@/lib/format';
 
 export default async function AdminOrdersPage({ searchParams }) {
-  const status = searchParams?.status || '';
-  const search = searchParams?.q || '';
+  const query = await searchParams;
+  const status = query?.status || '';
+  const search = query?.q || '';
 
   const orders = await getAllOrdersAdmin({ status, search });
 

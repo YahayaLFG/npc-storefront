@@ -5,13 +5,15 @@ import CurrencyPrice from '@/components/CurrencyPrice';
 import OrderTrackingTimeline from '@/components/account/OrderTrackingTimeline';
 
 export default async function OrderDetailPage({ params, searchParams }) {
-  const order = await getMyOrderByNumber(params.orderNumber);
+  const { orderNumber } = await params;
+  const query = await searchParams;
+  const order = await getMyOrderByNumber(orderNumber);
 
   if (!order) {
     return (
       <div className="mx-auto max-w-lg px-5 py-24 text-center">
         <p className="font-mono text-xs uppercase tracking-widest text-ink-fog">Not found</p>
-        <h1 className="mt-3 font-display text-2xl text-ink">We couldn't find that order.</h1>
+        <h1 className="mt-3 font-display text-2xl text-ink">We couldn&apos;t find that order.</h1>
         <Link href="/account/orders" className="mt-6 inline-block text-ink hover:underline">
           Back to my orders
         </Link>
@@ -31,12 +33,13 @@ export default async function OrderDetailPage({ params, searchParams }) {
       )
     : null;
   const daysLeft = storageExpiry
+    // eslint-disable-next-line react-hooks/purity -- This Server Component computes the live countdown per request.
     ? Math.ceil((storageExpiry.getTime() - Date.now()) / (24 * 60 * 60 * 1000))
     : null;
 
   return (
     <div className="mx-auto max-w-2xl px-5 py-14 md:px-8 md:py-20">
-      {searchParams?.confirmed === '1' && (
+      {query?.confirmed === '1' && (
         <div className="mb-10 flex items-center gap-3 border border-rule bg-canvas-alt p-4">
           <CheckCircle2 size={22} className="shrink-0 text-ink" />
           <p className="text-sm text-ink">Payment confirmed — your order is on its way to being purchased.</p>

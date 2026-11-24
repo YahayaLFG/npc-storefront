@@ -6,8 +6,9 @@ import ProductCard from '@/components/ProductCard';
 export const metadata = { title: 'Shop — NPC' };
 
 export default async function ShopPage({ searchParams }) {
-  const activeCollection = searchParams?.collection || null;
-  const activeCategory = searchParams?.category || null;
+  const query = await searchParams;
+  const activeCollection = query?.collection || null;
+  const activeCategory = query?.category || null;
 
   const all = await getProducts();
 

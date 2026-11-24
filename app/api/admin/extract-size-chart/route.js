@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { requireAdmin, extractFromImage } from '@/lib/admin/extract';
 import { STANDARD_SIZE_FIELDS, getSizeGuideTemplate } from '@/lib/taxonomy';
+import { publicError } from '@/lib/server-error';
 
 function buildPrompt(allowedFields) {
   return `This is a size chart from a product listing, possibly in Chinese or another language. Read the measurements and convert them into JSON — return ONLY the JSON object, no other text, no markdown fences:
@@ -44,6 +45,6 @@ export async function POST(request) {
     const extracted = await extractFromImage({ base64, mediaType, prompt });
     return NextResponse.json(extracted);
   } catch (err) {
-    return NextResponse.json({ error: err.message }, { status: 500 });
+    return NextResponse.json(publicError('admin.extract-size-chart', err, 'Could not read that size chart.'), { status: 500 });
   }
 }

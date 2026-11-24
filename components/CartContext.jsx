@@ -24,6 +24,7 @@ export function CartProvider({ children }) {
   useEffect(() => {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- Restore the persisted cart after client hydration.
       if (raw) setItems(JSON.parse(raw));
     } catch {
       // Corrupt or inaccessible storage — start empty rather than breaking the page.

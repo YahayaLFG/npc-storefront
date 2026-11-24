@@ -13,7 +13,7 @@ export default async function WarehousePage() {
         My Warehouse
       </h1>
       <p className="mt-4 max-w-md text-sm text-ink-fog">
-        Every item you've bought lands here first, stored free for 7 days. Ship pieces one at a
+        Every item you&apos;ve bought lands here first, stored free for 7 days. Ship pieces one at a
         time, or combine several into a single shipment to save on shipping.
       </p>
 

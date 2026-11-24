@@ -5,7 +5,8 @@ import { orderStatusLabel } from '@/lib/orderStatus';
 import PrintButton from '@/components/admin/PrintButton';
 
 export default async function InvoicePage({ params }) {
-  const order = await getOrderDetailAdmin(params.id);
+  const { id } = await params;
+  const order = await getOrderDetailAdmin(id);
   if (!order) notFound();
 
   return (

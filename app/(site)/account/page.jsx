@@ -94,7 +94,7 @@ export default async function AccountPage() {
         <h2 className="font-display text-xl text-ink">Notifications</h2>
 
         {recentNotifications.length === 0 ? (
-          <p className="mt-6 text-ink-fog">Nothing yet — you'll see updates on your orders here.</p>
+          <p className="mt-6 text-ink-fog">Nothing yet — you&apos;ll see updates on your orders here.</p>
         ) : (
           <div className="mt-6 divide-y divide-rule border-t border-b border-rule">
             {recentNotifications.map((n) => (

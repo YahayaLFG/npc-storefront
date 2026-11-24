@@ -9,6 +9,7 @@ import { uploadProductImage } from '@/lib/admin/upload';
 import { extractListing, extractSizeChart } from '@/lib/admin/clientExtract';
 import { generateId } from '@/lib/generateId';
 import { formatNGN } from '@/lib/format';
+import { captureUserFacingError } from '@/lib/user-facing-error';
 
 const csv = (arr) => (arr ?? []).join(', ');
 const parseCsv = (str) =>
@@ -162,7 +163,7 @@ export default function ProductForm({ initial }) {
         prev.map((v, i) => (i === index ? { ...v, images: [...v.images, ...uploaded] } : v))
       );
     } catch (err) {
-      setError(err.message);
+      setError(captureUserFacingError(err, 'admin.upload_product_image', 'Could not upload the image. Please try again.'));
     } finally {
       setUploading(false);
     }
@@ -286,7 +287,7 @@ export default function ProductForm({ initial }) {
 
       setImportNotice('Draft filled in below — check it over, adjust the name if you like, then Publish.');
     } catch (err) {
-      setError(`Screenshot import failed: ${err.message}`);
+      setError(`Screenshot import failed. ${captureUserFacingError(err, 'admin.extract_listing', 'Please try again.')}`);
     } finally {
       setImportingListing(false);
     }
@@ -338,7 +339,7 @@ export default function ProductForm({ initial }) {
         setVariants((prev) => prev.map((v) => (v.sizes.trim() ? v : { ...v, sizes: sizesCsv })));
       }
     } catch (err) {
-      setError(`Size chart import failed: ${err.message}`);
+      setError(`Size chart import failed. ${captureUserFacingError(err, 'admin.extract_size_chart', 'Please try again.')}`);
     } finally {
       setImportingSizeChart(false);
     }
@@ -355,7 +356,7 @@ export default function ProductForm({ initial }) {
       }
       setImages((prev) => [...prev, ...uploaded]);
     } catch (err) {
-      setError(err.message);
+      setError(captureUserFacingError(err, 'admin.save_product', 'Could not save this product. Please try again.'));
     } finally {
       setUploading(false);
     }
@@ -448,7 +449,7 @@ export default function ProductForm({ initial }) {
         router.push('/admin');
         router.refresh();
       } catch (err) {
-        setError(err.message);
+        setError(captureUserFacingError(err, 'admin.delete_product', 'Could not delete this product. Please try again.'));
       }
     });
   }
@@ -736,7 +737,7 @@ export default function ProductForm({ initial }) {
           <div className="border border-line p-4">
             <p className={labelClass}>Size Guides {importingSizeChart && <span className="text-bone">(reading chart…)</span>}</p>
             <p className="mt-1 text-xs text-mute">
-              Create one guide per measurement type — "Shirt", "Pants" — and assign each to
+              Create one guide per measurement type — &quot;Shirt&quot;, &quot;Pants&quot; — and assign each to
               whichever colors above actually need it. The same guide is reused, never duplicated.
             </p>
 

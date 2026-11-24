@@ -6,6 +6,7 @@ import { UploadCloud, X } from 'lucide-react';
 import { uploadProductImage } from '@/lib/admin/upload';
 import { saveWarehouseDetails, extendStorageAdmin, requestShippingPayment } from '@/lib/admin/orders';
 import { formatNGN } from '@/lib/format';
+import { captureUserFacingError } from '@/lib/user-facing-error';
 
 export default function WarehouseForm({ orderId, warehouseItem }) {
   const router = useRouter();
@@ -25,6 +26,7 @@ export default function WarehouseForm({ orderId, warehouseItem }) {
     ? Math.ceil(
         (new Date(warehouseItem.received_at).getTime() +
           (warehouseItem.free_storage_days + warehouseItem.extended_days) * 86400000 -
+          // eslint-disable-next-line react-hooks/purity -- The admin form displays the live remaining storage time.
           Date.now()) /
           86400000
       )
@@ -41,7 +43,7 @@ export default function WarehouseForm({ orderId, warehouseItem }) {
       }
       setPhotos((prev) => [...prev, ...uploaded]);
     } catch (err) {
-      setError(err.message);
+      setError(captureUserFacingError(err, 'admin.upload_warehouse_image', 'Could not upload the image. Please try again.'));
     } finally {
       setUploading(false);
     }
@@ -56,7 +58,7 @@ export default function WarehouseForm({ orderId, warehouseItem }) {
         setNotice('Saved.');
         router.refresh();
       } catch (err) {
-        setError(err.message);
+        setError(captureUserFacingError(err, 'admin.save_warehouse_details', 'Could not save warehouse details. Please try again.'));
       }
     });
   }
@@ -70,7 +72,7 @@ export default function WarehouseForm({ orderId, warehouseItem }) {
         setNotice(`Storage extended by ${extraDays} days.`);
         router.refresh();
       } catch (err) {
-        setError(err.message);
+        setError(captureUserFacingError(err, 'admin.extend_warehouse_storage', 'Could not update storage. Please try again.'));
       }
     });
   }
@@ -84,7 +86,7 @@ export default function WarehouseForm({ orderId, warehouseItem }) {
         setNotice(`Shipping payment link sent to the customer — ${formatNGN(result.shippingCost)}.`);
         router.refresh();
       } catch (err) {
-        setError(err.message);
+        setError(captureUserFacingError(err, 'admin.request_shipping_payment', 'Could not start the shipping payment. Please try again.'));
       }
     });
   }
@@ -94,7 +96,7 @@ export default function WarehouseForm({ orderId, warehouseItem }) {
       <div className="border border-line p-5">
         <p className="text-xs uppercase tracking-wide text-mute">Warehouse</p>
         <p className="mt-2 text-sm text-fog">
-          No warehouse item yet — advance this order's status to "Warehouse Received" to create one.
+          No warehouse item yet — advance this order&apos;s status to &quot;Warehouse Received&quot; to create one.
         </p>
       </div>
     );

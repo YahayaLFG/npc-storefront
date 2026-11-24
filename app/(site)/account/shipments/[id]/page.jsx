@@ -6,13 +6,15 @@ import { SHIPMENT_STATUSES } from '@/lib/orderStatus';
 import CurrencyPrice from '@/components/CurrencyPrice';
 
 export default async function ShipmentDetailPage({ params, searchParams }) {
-  const shipment = await getMyShipmentById(params.id);
+  const { id } = await params;
+  const query = await searchParams;
+  const shipment = await getMyShipmentById(id);
 
   if (!shipment) {
     return (
       <div className="mx-auto max-w-lg px-5 py-24 text-center">
         <p className="font-mono text-xs uppercase tracking-widest text-ink-fog">Not found</p>
-        <h1 className="mt-3 font-display text-2xl text-ink">We couldn't find that shipment.</h1>
+        <h1 className="mt-3 font-display text-2xl text-ink">We couldn&apos;t find that shipment.</h1>
         <Link href="/account/warehouse" className="mt-6 inline-block text-ink hover:underline">
           Back to my warehouse
         </Link>
@@ -24,7 +26,7 @@ export default async function ShipmentDetailPage({ params, searchParams }) {
 
   return (
     <div className="mx-auto max-w-2xl px-5 py-14 md:px-8 md:py-20">
-      {searchParams?.confirmed === '1' && (
+      {query?.confirmed === '1' && (
         <div className="mb-10 flex items-center gap-3 border border-rule bg-canvas-alt p-4">
           <CheckCircle2 size={22} className="shrink-0 text-ink" />
           <p className="text-sm text-ink">Shipping paid — your combined shipment is being packed.</p>

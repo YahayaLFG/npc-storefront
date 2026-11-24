@@ -28,12 +28,12 @@ export default function Header({ user }) {
             <span className="hidden text-sm tracking-wide sm:inline">Menu</span>
           </button>
 
-          <a
+          <Link
             href="/"
             className="justify-self-center font-display text-2xl font-extrabold tracking-tightest text-ink"
           >
             NPC
-          </a>
+          </Link>
 
           <div className="flex items-center gap-5 justify-self-end text-ink">
             <button onClick={() => setSearchOpen(true)} aria-label="Search">
@@ -55,8 +55,8 @@ export default function Header({ user }) {
         </div>
       </header>
 
-      <NavOverlay open={navOpen} onClose={() => setNavOpen(false)} />
-      <SearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} />
+      <NavOverlay key={navOpen ? 'open' : 'closed'} open={navOpen} onClose={() => setNavOpen(false)} />
+      <SearchOverlay key={searchOpen ? 'open' : 'closed'} open={searchOpen} onClose={() => setSearchOpen(false)} />
       <CartOverlay open={cartOpen} onClose={() => setCartOpen(false)} />
     </>
   );

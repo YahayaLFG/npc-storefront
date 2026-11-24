@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import Image from 'next/image';
 import { UploadCloud, Link2, Image as ImageIcon, X } from 'lucide-react';
 import { buildRequestMessage, buildWhatsAppLink } from '@/lib/whatsapp';
 
@@ -13,6 +14,10 @@ export default function RequestPage() {
   const [quantity, setQuantity] = useState(1);
   const [whatsapp, setWhatsapp] = useState('');
   const [error, setError] = useState('');
+
+  useEffect(() => () => {
+    if (preview) URL.revokeObjectURL(preview);
+  }, [preview]);
 
   function handleFile(file) {
     if (!file) return;
@@ -50,8 +55,8 @@ export default function RequestPage() {
       <p className="font-mono text-xs uppercase tracking-[0.3em] text-ink-fog">Not everything makes the site</p>
       <h1 className="mt-3 font-display text-3xl font-medium tracking-tight text-ink md:text-4xl">Send it through</h1>
       <p className="mt-4 max-w-md text-sm text-ink-fog md:text-base">
-        Seen something we don't have listed? Drop a link or an image and your
-        details, and we'll come back with a price and a straight answer.
+        Seen something we don&apos;t have listed? Drop a link or an image and your
+        details, and we&apos;ll come back with a price and a straight answer.
       </p>
 
       <form onSubmit={handleSubmit} className="mt-10 space-y-8">
@@ -80,7 +85,7 @@ export default function RequestPage() {
 
           {preview ? (
             <div className="relative mt-3 w-fit">
-              <img src={preview} alt="Uploaded reference preview" className="h-40 border border-rule bg-canvas-alt object-contain" />
+              <Image src={preview} alt="Uploaded reference preview" width={160} height={160} unoptimized className="h-40 w-auto border border-rule bg-canvas-alt object-contain" />
               <button
                 type="button"
                 onClick={() => {

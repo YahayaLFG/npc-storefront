@@ -8,7 +8,6 @@ export default function NavOverlay({ open, onClose }) {
   const [expanded, setExpanded] = useState(null);
 
   useEffect(() => {
-    if (!open) setExpanded(null);
     document.body.style.overflow = open ? 'hidden' : '';
     return () => {
       document.body.style.overflow = '';

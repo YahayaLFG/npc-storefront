@@ -3,7 +3,8 @@ import { getProductByIdAdmin } from '@/lib/admin/products';
 import ProductForm from '@/components/admin/ProductForm';
 
 export default async function EditProductPage({ params }) {
-  const product = await getProductByIdAdmin(params.id);
+  const { id } = await params;
+  const product = await getProductByIdAdmin(id);
   if (!product) notFound();
 
   return (
